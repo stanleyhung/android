@@ -1,0 +1,1 @@
+03-03 00:19:17.292: E/Activity(32645): getParentActivityIntent: bad parentActivityName 'com.example.myfirstapp.MainActivity' in manifest

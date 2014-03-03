@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +24,6 @@ public class MainActivity extends Activity {
 	private final static String networkAddress = "192.168.1.255";
 	public final static String LOG_TAG = "HOME";
 	private TextView textView;
-	private final static String HOME = "\"Stanley\"";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +57,6 @@ public class MainActivity extends Activity {
     	ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     	NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     	if (networkInfo != null && networkInfo.isConnected()) {
-    		WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
-    		String ssid = wm.getConnectionInfo().getSSID();
-    		if (!ssid.equals(HOME)) {
-    			textView.setText("Failure - Not Connected to 'Stanley' network");
-    			Log.e(MainActivity.LOG_TAG, "SSID should be: " + HOME + ", but is: " + ssid + ".");
-    			return;
-    		}
     		ExecuteWake ew = new ExecuteWake();
     		ew.execute();
     	} else {

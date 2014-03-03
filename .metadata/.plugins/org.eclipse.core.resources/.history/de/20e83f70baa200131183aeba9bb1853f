@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 	private final static String networkAddress = "192.168.1.255";
 	public final static String LOG_TAG = "HOME";
 	private TextView textView;
-	private final static String HOME = "\"Stanley\"";
+	private final static String HOME = '"Stanley"';
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

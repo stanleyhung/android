@@ -25,7 +25,6 @@ public class MainActivity extends Activity {
 	private final static String networkAddress = "192.168.1.255";
 	public final static String LOG_TAG = "HOME";
 	private TextView textView;
-	private final static String HOME = "\"Stanley\"";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +60,9 @@ public class MainActivity extends Activity {
     	if (networkInfo != null && networkInfo.isConnected()) {
     		WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
     		String ssid = wm.getConnectionInfo().getSSID();
-    		if (!ssid.equals(HOME)) {
+    		if (!ssid.equals("Stanley")) {
     			textView.setText("Failure - Not Connected to 'Stanley' network");
-    			Log.e(MainActivity.LOG_TAG, "SSID should be: " + HOME + ", but is: " + ssid + ".");
+    			Log.e(MainActivity.LOG_TAG, "SSID should be 'Stanley', but is: " + ssid);
     			return;
     		}
     		ExecuteWake ew = new ExecuteWake();

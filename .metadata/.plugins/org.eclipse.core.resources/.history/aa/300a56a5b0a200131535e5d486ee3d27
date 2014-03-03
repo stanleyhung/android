@@ -1,0 +1,77 @@
+package com.example.home;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.EditText;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
+public class MainActivity extends Activity {
+	
+	private final static String macAddress = "00.1D.60.88.57.46";
+	private final static String networkAddress = "192.168.1.255";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+    private static byte[] getAddressBytes (String address, int radix) throws IllegalArgumentException {
+		String[] string = address.split("\\.");
+		byte[] bytes = new byte[string.length];
+
+		for (int i = 0; i < string.length; i++) {
+			bytes[i] = (byte) Integer.parseInt(string[i], radix);
+		}
+
+		return bytes;
+
+	}
+    /** Called when the user clicks the wake button */
+    public void sendWake(View view) {
+    	byte[] macAddressBytes = getAddressBytes(macAddress, 16);
+		byte[] bytes = new byte[6 + 16*macAddressBytes.length];
+
+		for (int i = 0; i < 6; i++) {
+			bytes[i] = (byte) 0xff;
+		}
+
+		for (int i = 6; i < bytes.length; i++) {
+			bytes[i] = macAddressBytes[i % 6];
+		}
+
+		byte[] network = getAddressBytes(networkAddress, 10);
+		try {
+			InetAddress ipAddress = InetAddress.getByAddress(network);
+			DatagramPacket packet = new DatagramPacket(bytes, bytes.length, ipAddress,80);
+			DatagramSocket socket = new DatagramSocket();
+			socket.send(packet);
+			socket.close();
+		} catch(UnknownHostException e) {
+			Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
+		} catch(SocketException e) {
+			Log.e(MainActivity.LOG_TAG, "Error - Socket Exception");
+		} catch(IOException e) {
+			Log.e(MainActivity.LOG_TAG, "Error - IO Exception");
+		}
+    }
+    
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Home</string>
+    <string name="action_settings">Settings</string>
+    <string name="instruction">Press Button to Turn On Computer!</string>
+    <string name="button_wake">Wake Up Computer</string>
+   
+
+</resources>

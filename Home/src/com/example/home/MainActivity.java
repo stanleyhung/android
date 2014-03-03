@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -115,6 +116,12 @@ public class MainActivity extends Activity {
         protected void onPostExecute(Boolean result) {
         	if (result == true) {
         		textView.setText("Success!");
+        		Handler h = new Handler();
+        		h.postDelayed(new Runnable() { 
+        	         public void run() { 
+        	              textView.setText("Turn On Computer"); 
+        	         } 
+        	    }, 3000); 
         	} else {
         		textView.setText("FAILURE - Could not send packet");
         	}

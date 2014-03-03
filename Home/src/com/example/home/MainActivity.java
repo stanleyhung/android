@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = (TextView) findViewById(R.id.myText);
+        textView = (TextView) findViewById(R.id.myButton);
     }
 
 

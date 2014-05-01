@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
  */
 public class Server extends Thread {
 	private final static int NUM_THREADS = 4;
-	private RobotControl robot;ue
+	private RobotControl robot;
 	private NetworkQueue requests;
 	private ExecutorService executor;
 	private Network network;
@@ -26,14 +26,6 @@ public class Server extends Thread {
 		}
 		requests = new NetworkQueue();
 		executor = Executors.newFixedThreadPool(NUM_THREADS);
-	}
-	
-	private synchronized void addToQueue(Message m) {
-		requests.add(m);
-	}
-	
-	private synchronized Message getNext() {
-		return requests.poll();
 	}
 	
 	public void run() {

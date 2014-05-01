@@ -32,6 +32,14 @@ public class Message {
 		myMessage = message;
 		key = validCommands.get(message);
 	}
+	
+	public int getKey() {
+		return key;
+	}
+	
+	public String getMessage() {
+		return myMessage;
+	}
 	/**
 	 * @param args
 	 */

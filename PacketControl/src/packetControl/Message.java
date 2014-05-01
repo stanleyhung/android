@@ -28,7 +28,7 @@ public class Message {
 	}
 	
 	public Message(String message) {
-		if(!validCommands.containsKey(myMessage)) {
+		if(!validCommands.containsKey(message)) {
 			throw new IllegalArgumentException();
 		}
 		myMessage = message;

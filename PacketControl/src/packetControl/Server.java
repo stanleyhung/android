@@ -5,12 +5,17 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * @author Stanley
+ * 
+ */
 public class Server extends Thread {
 	private final static int NUM_THREADS = 4;
-	private RobotControl robot;
-	private LinkedList<Message> requests;
+	private RobotControl robot;ue
+	private NetworkQueue requests;
 	private ExecutorService executor;
+	private Network network;
+	
 	
 	public Server() {
 		try {
@@ -19,7 +24,7 @@ public class Server extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		requests = new LinkedList<Message>();
+		requests = new NetworkQueue();
 		executor = Executors.newFixedThreadPool(NUM_THREADS);
 	}
 	
@@ -36,21 +41,8 @@ public class Server extends Thread {
 	}
 	
 	public static void main(String[] args) {
-		
-	}
-	
-	private class NetworkThread implements Runnable {
-		@Override
-		public void run() {
-			
-		}
-	}
-	
-	private class RobotThread implements Runnable {
-		@Override
-		public void run() {
-			
-		}
+		Server s = new Server();
+		s.run();
 	}
 	
 }

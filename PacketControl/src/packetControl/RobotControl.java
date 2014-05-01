@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 
 
 //RobotControl handles the lower-level logic for interfacing with VLC Media Player through keystrokes
-class RobotControl extends Robot {
+class RobotControl {
 	private Robot robot;
 	
 	public RobotControl() throws AWTException {

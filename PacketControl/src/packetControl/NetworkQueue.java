@@ -6,7 +6,7 @@ public class NetworkQueue {
 	private LinkedList<Message> queue;
 	
 	public NetworkQueue() {
-		
+		queue = new LinkedList<Message>();
 	}
 	
 	public synchronized void addToQueue(Message m) {

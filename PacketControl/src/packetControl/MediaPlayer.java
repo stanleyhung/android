@@ -2,15 +2,24 @@ package packetControl;
 
 import java.awt.AWTException;
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.LinkedList;
 
 
 //RobotControl handles the lower-level logic for interfacing with VLC Media Player through keystrokes
 class MediaPlayer implements Runnable{
 	private Robot robot;
+	private NetworkQueue queue;
 	
+	//for testing purposes only
 	public MediaPlayer() throws AWTException {
 		robot = new Robot();
+	}
+	
+	public MediaPlayer(NetworkQueue queue) throws AWTException {
+		robot = new Robot();
+		this.queue = queue;
 	}
 	/**
 	 * @param args
@@ -41,12 +50,17 @@ class MediaPlayer implements Runnable{
 			System.out.println("fileName is: ");
 			System.out.print(fileName);
 			Process p = Runtime.getRuntime().exec(cmd);
-			Thread.sleep(5000);
+			while (true) {
+				if (queue == null) {
+					break;
+				}
+				Message m = queue.getNext();
+				if (m != null) {
+					
+				}
+			}
 			p.destroy();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

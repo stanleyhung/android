@@ -7,22 +7,24 @@ import java.util.Map;
 //Class that enables communication between Control and Robot Control
 public class Message {
 	private String myMessage;
-	private int key;
+	private int[] key;
 	
 	final static String STOP = "stop";
 	final static String PLAY = "play";
 	final static String PAUSE = "pause";
 	final static String NEXT = "next";
 	final static String PREVIOUS = "previous";
+	final static String QUIT = "quit";
 	
-	private static final Map<String, Integer> validCommands;
+	private static final Map<String, int[]> validCommands;
 	static {
-		validCommands = new HashMap<String, Integer>();
-		validCommands.put(STOP, KeyEvent.VK_S);
-		validCommands.put(PLAY, KeyEvent.VK_CLOSE_BRACKET);
-		validCommands.put(PAUSE, KeyEvent.VK_OPEN_BRACKET);
-		validCommands.put(NEXT, KeyEvent.VK_N);
-		validCommands.put(PREVIOUS, KeyEvent.VK_P);
+		validCommands = new HashMap<String, int[]>();
+		validCommands.put(STOP, new int[] {KeyEvent.VK_S});
+		validCommands.put(PLAY, new int[] {KeyEvent.VK_CLOSE_BRACKET});
+		validCommands.put(PAUSE, new int[] {KeyEvent.VK_OPEN_BRACKET});
+		validCommands.put(NEXT, new int[] {KeyEvent.VK_N});
+		validCommands.put(PREVIOUS, new int[] {KeyEvent.VK_P});
+		validCommands.put(QUIT, new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_Q});
 	}
 	
 	public Message(String message) {
@@ -33,7 +35,7 @@ public class Message {
 		key = validCommands.get(message);
 	}
 	
-	public int getKey() {
+	public int[] getKeys() {
 		return key;
 	}
 	

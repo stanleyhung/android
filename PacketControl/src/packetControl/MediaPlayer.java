@@ -27,8 +27,12 @@ class MediaPlayer implements Runnable{
 	
 	public int handle(Message m) {
 		try {
-			robot.keyPress(m.getKey());
-			robot.keyRelease(m.getKey());
+			for (int key : m.getKeys()) {
+				robot.keyPress(key);
+			}
+			for (int key : m.getKeys()) {
+				robot.keyRelease(key);
+			}
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			return -1;
@@ -40,6 +44,9 @@ class MediaPlayer implements Runnable{
 	public static void main(String[] args) throws AWTException {
 		// TODO Auto-generated method stub
 		MediaPlayer player = new MediaPlayer();
+		player.queue = new NetworkQueue();
+		Message m = new Message(Message.QUIT);
+		player.queue.addToQueue(m);
 		player.run();
 	}
 	@Override
@@ -50,17 +57,23 @@ class MediaPlayer implements Runnable{
 			System.out.println("fileName is: ");
 			System.out.print(fileName);
 			Process p = Runtime.getRuntime().exec(cmd);
+			Thread.sleep(3000);
 			while (true) {
 				if (queue == null) {
 					break;
 				}
 				Message m = queue.getNext();
 				if (m != null) {
-					
+					if (handle(m) != 0) {
+						break;
+					}
 				}
 			}
 			p.destroy();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

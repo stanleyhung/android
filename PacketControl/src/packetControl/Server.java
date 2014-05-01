@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
  */
 public class Server extends Thread {
 	private final static int NUM_THREADS = 4;
-	private RobotControl robot;
+	private MediaPlayer robot;
 	private NetworkQueue requests;
 	private ExecutorService executor;
 	private Network network;
@@ -19,7 +19,7 @@ public class Server extends Thread {
 	
 	public Server() {
 		try {
-			robot = new RobotControl();
+			robot = new MediaPlayer();
 		} catch (AWTException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

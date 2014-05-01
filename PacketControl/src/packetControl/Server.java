@@ -30,4 +30,27 @@ public class Server extends Thread {
 	private synchronized Message getNext() {
 		return requests.poll();
 	}
+	
+	public void run() {
+		
+	}
+	
+	public static void main(String[] args) {
+		
+	}
+	
+	private class NetworkThread implements Runnable {
+		@Override
+		public void run() {
+			
+		}
+	}
+	
+	private class RobotThread implements Runnable {
+		@Override
+		public void run() {
+			
+		}
+	}
+	
 }

@@ -4,11 +4,11 @@ import java.awt.AWTException;
 import java.awt.Robot;
 
 public class Control {
-	private Robot robot;
+	private RobotControl robot;
 	
 	public Control() {
 		try {
-			robot = new Robot();
+			robot = new RobotControl();
 		} catch (AWTException e) {
 			// TODO Auto-generated catch block
 			System.err.println("Could not initialize Control Robot");

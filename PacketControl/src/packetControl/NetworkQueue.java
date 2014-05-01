@@ -13,7 +13,7 @@ public class NetworkQueue {
 		queue.add(m);
 	}
 	
-	public synchronized Message getNext(Message m) {
+	public synchronized Message getNext() {
 		return queue.poll();
 	}
 }

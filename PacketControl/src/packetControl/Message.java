@@ -1,11 +1,13 @@
 package packetControl;
 
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 //Class that enables communication between Control and Robot Control
 public class Message {
-	public String myMessage;
+	private String myMessage;
+	private int key;
 	
 	final static String STOP = "stop";
 	final static String PLAY = "play";
@@ -13,14 +15,14 @@ public class Message {
 	final static String NEXT = "next";
 	final static String PREVIOUS = "previous";
 	
-	private static final Map<String, Boolean> validCommands;
+	private static final Map<String, Integer> validCommands;
 	static {
-		validCommands = new HashMap<String, Boolean>();
-		validCommands.put(STOP, true);
-		validCommands.put(PLAY, true);
-		validCommands.put(PAUSE, true);
-		validCommands.put(NEXT, true);
-		validCommands.put(PREVIOUS, true);
+		validCommands = new HashMap<String, Integer>();
+		validCommands.put(STOP, KeyEvent.VK_S);
+		validCommands.put(PLAY, KeyEvent.VK_CLOSE_BRACKET);
+		validCommands.put(PAUSE, KeyEvent.VK_OPEN_BRACKET);
+		validCommands.put(NEXT, KeyEvent.VK_N);
+		validCommands.put(PREVIOUS, KeyEvent.VK_P);
 	}
 	
 	public Message(String message) {
@@ -28,6 +30,7 @@ public class Message {
 			throw new IllegalArgumentException();
 		}
 		myMessage = message;
+		key = validCommands.get(message);
 	}
 	/**
 	 * @param args

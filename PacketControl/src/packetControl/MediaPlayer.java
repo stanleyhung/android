@@ -10,17 +10,11 @@ import java.util.LinkedList;
 //RobotControl handles the lower-level logic for interfacing with VLC Media Player through keystrokes
 class MediaPlayer implements Runnable{
 	private Robot robot;
-	private NetworkQueue queue;
 	
-	//for testing purposes only
 	public MediaPlayer() throws AWTException {
 		robot = new Robot();
 	}
 	
-	public MediaPlayer(NetworkQueue queue) throws AWTException {
-		robot = new Robot();
-		this.queue = queue;
-	}
 	/**
 	 * @param args
 	 */
@@ -42,11 +36,10 @@ class MediaPlayer implements Runnable{
 	
 	
 	public static void main(String[] args) throws AWTException {
-		// TODO Auto-generated method stub
+		Server s = new Server();		
 		MediaPlayer player = new MediaPlayer();
-		player.queue = new NetworkQueue();
 		Message m = new Message(Message.QUIT);
-		player.queue.addToQueue(m);
+		Server.requests.addToQueue(m);
 		player.run();
 	}
 	@Override
@@ -59,10 +52,10 @@ class MediaPlayer implements Runnable{
 			Process p = Runtime.getRuntime().exec(cmd);
 			Thread.sleep(3000);
 			while (true) {
-				if (queue == null) {
+				if (Server.requests == null) {
 					break;
 				}
-				Message m = queue.getNext();
+				Message m = Server.requests.getNext();
 				if (m != null) {
 					if (handle(m) != 0) {
 						break;

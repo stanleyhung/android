@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 /**
  * @author Stanley
  * 
@@ -12,7 +13,7 @@ import java.util.concurrent.Executors;
 public class Server extends Thread {
 	private final static int NUM_THREADS = 4;
 	private MediaPlayer robot;
-	private NetworkQueue requests;
+	public static NetworkQueue requests;
 	private ExecutorService executor;
 	private Network network;
 	

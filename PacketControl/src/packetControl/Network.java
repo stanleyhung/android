@@ -8,10 +8,8 @@ package packetControl;
  *
  */
 public class Network implements Runnable {
-	private NetworkQueue queue;
 	
-	public Network(NetworkQueue queue) {
-		this.queue = queue;
+	public Network() {
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()

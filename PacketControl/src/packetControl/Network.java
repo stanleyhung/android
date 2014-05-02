@@ -53,8 +53,10 @@ public class Network implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				Socket s = server.accept();
-				clients.addToQueue(s);
+				if (status == true) {
+					Socket s = server.accept();
+					clients.addToQueue(s);
+				}
 			} catch (SocketTimeoutException e) {
 				//falls through
 			} catch (IOException e) {

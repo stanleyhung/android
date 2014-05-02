@@ -6,6 +6,7 @@ package packetControl;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.LinkedList;
 
 /**
@@ -18,11 +19,14 @@ public class Network implements Runnable {
 	private ServerSocket server;
 	LinkedList<Socket> clients;
 	private boolean status;
+	private final static int TIMEOUT = 3000;
 	
 	public Network() throws IOException {
 		server = new ServerSocket(PORT);
+		server.setSoTimeout(TIMEOUT);
 		clients = new LinkedList<Socket>();
 		status = false;
+		
 	}
 	
 	//turns the server on and returns true on success, false if the server was already on
@@ -47,7 +51,17 @@ public class Network implements Runnable {
 	 */
 	@Override
 	public void run() {
-		
+		while (true) {
+			try {
+				Socket s = server.accept();
+				clients.add(s);
+			} catch (SocketTimeoutException e) {
+				//falls through
+			} catch (IOException e) {
+				e.printStackTrace();
+				break;
+			}
+		}
 	}
 
 }

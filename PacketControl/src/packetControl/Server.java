@@ -13,8 +13,8 @@ import java.util.concurrent.Executors;
 public class Server extends Thread {
 	private final static int NUM_THREADS = 4;
 	private MediaPlayer robot;
-	public static NetworkQueue requests;
-	private ExecutorService executor;
+	static NetworkQueue requests;
+	static ExecutorService executor;
 	private Network network;
 	
 	

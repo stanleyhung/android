@@ -9,6 +9,8 @@ package packetControl;
  */
 public class Network implements Runnable {
 	
+	private final static int PORT = 9;
+	
 	public Network() {
 	}
 	/* (non-Javadoc)

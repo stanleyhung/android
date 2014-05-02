@@ -17,14 +17,14 @@ public class Network implements Runnable {
 	
 	private final static int PORT = 9;
 	private ServerSocket server;
-	LinkedList<Socket> clients;
+	SynchronizedQueue clients;
 	private boolean status;
 	private final static int TIMEOUT = 3000;
 	
 	public Network() throws IOException {
 		server = new ServerSocket(PORT);
 		server.setSoTimeout(TIMEOUT);
-		clients = new LinkedList<Socket>();
+		clients = new SynchronizedQueue();
 		status = false;
 		
 	}
@@ -54,7 +54,7 @@ public class Network implements Runnable {
 		while (true) {
 			try {
 				Socket s = server.accept();
-				clients.add(s);
+				clients.addToQueue(s);
 			} catch (SocketTimeoutException e) {
 				//falls through
 			} catch (IOException e) {

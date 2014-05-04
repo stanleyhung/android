@@ -17,7 +17,7 @@ public class Network implements Runnable {
 	
 	private final static int PORT = 9;
 	private ServerSocket server;
-	SynchronizedQueue clients; //Queue of sockets representing client connections
+	static SynchronizedQueue clients; //Queue of sockets representing client connections
 	private boolean status;
 	private final static int TIMEOUT = 3000;
 	
@@ -48,6 +48,7 @@ public class Network implements Runnable {
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
+	 * The Network thread accepts client connections and adds them to a queue that is shared by Handler threads.
 	 */
 	@Override
 	public void run() {

@@ -50,7 +50,7 @@ class MediaPlayer implements Runnable{
 			System.out.println("fileName is: ");
 			System.out.println(fileName);
 			Process p = Runtime.getRuntime().exec(cmd);
-			Thread.sleep(3000);
+			Thread.sleep(5000);
 			while (true) {
 				if (Server.requests == null) {
 					break;

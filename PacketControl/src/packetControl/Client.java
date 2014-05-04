@@ -15,7 +15,6 @@ public class Client implements Runnable {
 		//Test the Network and Handler classes by simulating a client
 		Socket s;
 		try {
-			Thread.sleep(3000);
 			s = new Socket(InetAddress.getLocalHost(), Network.PORT);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			writer.write(new String(Message.QUIT), 0, Message.PLAY.length());
@@ -33,7 +32,7 @@ public class Client implements Runnable {
 				System.err.println(str);
 				s.close();
 			}
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			System.err.println("Client error");
 			e.printStackTrace();
 			return;

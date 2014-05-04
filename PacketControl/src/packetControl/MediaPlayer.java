@@ -41,11 +41,8 @@ class MediaPlayer implements Runnable{
 	}
 	@Override
 	public void run() {
-		String fileName = "C:/Users/Stanley/Documents/Music/f2.wav";
-		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", fileName};
+		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", "C:/Users/Stanley/Documents/Music/"};
 		try {
-			System.out.println("fileName is: ");
-			System.out.println(fileName);
 			Process p = Runtime.getRuntime().exec(cmd);
 			Thread.sleep(5000);
 			while (true) {

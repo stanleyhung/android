@@ -1,14 +1,17 @@
 package packetControl;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class Handler implements Runnable {
 
 	private final static int DELAY = 500;
+	final static String SUCCESS = "success";
 	@Override
 	/*
 	 * (non-Javadoc)
@@ -37,6 +40,9 @@ public class Handler implements Runnable {
 				}
 				Message m = new Message(command);
 				Server.requests.addToQueue(m);
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+				writer.write(Handler.SUCCESS, 0, Handler.SUCCESS.length());
+				writer.newLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 				break;

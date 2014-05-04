@@ -15,7 +15,7 @@ import java.util.concurrent.Semaphore;
  */
 public class Network implements Runnable {
 	
-	private final static int PORT = 9;
+	public final static int PORT = 9;
 	private ServerSocket server;
 	static SynchronizedQueue clients; //Queue of sockets representing client connections
 	private boolean status;

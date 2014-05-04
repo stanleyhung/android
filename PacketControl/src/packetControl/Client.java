@@ -21,6 +21,7 @@ public class Client implements Runnable {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			writer.write(new String(Message.PLAY), 0, Message.PLAY.length());
 			writer.newLine();
+			writer.flush();
 			System.out.println("client successfully sent request");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			System.out.println("client waiting for server response");

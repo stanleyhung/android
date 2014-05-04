@@ -50,6 +50,7 @@ public class Handler implements Runnable {
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 				writer.write(Handler.SUCCESS, 0, Handler.SUCCESS.length());
 				writer.newLine();
+				writer.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 				break;

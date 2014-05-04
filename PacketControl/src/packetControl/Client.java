@@ -26,7 +26,7 @@ public class Client implements Runnable {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			System.out.println("client waiting for server response");
 			String str = reader.readLine();
-			if (str == Handler.SUCCESS) {
+			if (str.equals(Handler.SUCCESS)) {
 				System.out.println("Client success");
 				s.close();
 			} else {

@@ -1,5 +1,11 @@
 package packetControl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+
 public class Handler implements Runnable {
 
 	private final static int DELAY = 500;
@@ -11,9 +17,29 @@ public class Handler implements Runnable {
 	 */
 	public void run() {
 		while (true) {
+			try {
+				Network.sem.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				break;
+			}
 			Object o = Network.clients.getNext();
-			if (o != null) {
-				
+			if (o == null) {
+				System.err.println("Fatal error - not object in queue after semaphore acquired by handler");
+				break;
+			}
+			Socket s = (Socket) o;
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+				String command = reader.readLine();
+				if (Message.isValidCommand(command) != true) {
+					break;
+				}
+				Message m = new Message(command);
+				Server.requests.addToQueue(m);
+			} catch (IOException e) {
+				e.printStackTrace();
+				break;
 			}
 		}
 

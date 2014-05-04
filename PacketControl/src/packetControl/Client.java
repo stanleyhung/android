@@ -25,11 +25,13 @@ public class Client implements Runnable {
 			System.out.println("client successfully sent request");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			System.out.println("client waiting for server response");
-			if (reader.readLine() == Handler.SUCCESS) {
+			String str = reader.readLine();
+			if (str == Handler.SUCCESS) {
 				System.out.println("Client success");
 				s.close();
 			} else {
-				System.err.println("Client did not get success message");
+				System.err.println("Client did not get success message, but got instead:");
+				System.err.println(str);
 				s.close();
 			}
 		} catch (IOException | InterruptedException e) {

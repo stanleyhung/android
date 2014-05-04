@@ -8,6 +8,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.AbstractQueuedLongSynchronizer;
+import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 /**
  * @author Stanley
@@ -20,13 +23,14 @@ public class Network implements Runnable {
 	static SynchronizedQueue clients; //Queue of sockets representing client connections
 	private boolean status;
 	private final static int TIMEOUT = 3000;
+	static Semaphore sem;
 	
 	public Network() throws IOException {
 		server = new ServerSocket(PORT);
 		server.setSoTimeout(TIMEOUT);
 		clients = new SynchronizedQueue();
 		status = false;
-		
+		sem = new Semaphore(0);
 	}
 	
 	//turns the server on and returns true on success, false if the server was already on
@@ -57,6 +61,7 @@ public class Network implements Runnable {
 				if (status == true) {
 					Socket s = server.accept(); //timeouts after TIMEOUT milliseconds
 					clients.addToQueue(s);
+					sem.release();
 				}
 			} catch (SocketTimeoutException e) {
 				//falls through

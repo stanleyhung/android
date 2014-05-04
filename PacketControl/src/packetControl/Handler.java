@@ -21,6 +21,9 @@ public class Handler implements Runnable {
 	public void run() {
 		while (true) {
 			try {
+				if (Network.sem == null) {
+					continue;
+				}
 				Network.sem.acquire();
 			} catch (InterruptedException e) {
 				e.printStackTrace();

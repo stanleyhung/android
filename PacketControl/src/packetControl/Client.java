@@ -22,6 +22,7 @@ public class Client implements Runnable {
 			writer.newLine();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			if (reader.readLine() == Handler.SUCCESS) {
+				System.out.println("Client success");
 				s.close();
 			} else {
 				System.err.println("Client did not get success message");

@@ -76,6 +76,7 @@ public class Network implements Runnable {
 		try {
 			n = new Network();
 			System.out.println("running network server...");
+			n.turnOn();
 			n.run();
 		} catch (IOException e) {
 			System.err.println("Network error");

@@ -22,6 +22,7 @@ public class Handler implements Runnable {
 		while (true) {
 			try {
 				if (Network.sem == null) {
+					System.out.println("Network.sem is null");
 					continue;
 				}
 				System.out.println("handler waiting for server to add socket to queue");

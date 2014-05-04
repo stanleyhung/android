@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -16,7 +17,8 @@ public class Client implements Runnable {
 		//Test the Network and Handler classes by simulating a client
 		Socket s;
 		try {
-			s = new Socket(InetAddress.getLocalHost(), Network.PORT);
+			s = new Socket();
+			s.bind(new InetSocketAddress(InetAddress.getLocalHost(), Network.PORT));
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 			writer.write(new String(Message.PLAY), 0, Message.PLAY.length());
 			writer.newLine();

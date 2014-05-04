@@ -42,6 +42,10 @@ public class Message {
 	public String getMessage() {
 		return myMessage;
 	}
+	
+	public boolean isValidCommand(String command) {
+		return validCommands.containsKey(command);
+	}
 	/**
 	 * @param args
 	 */

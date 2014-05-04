@@ -58,6 +58,7 @@ class MediaPlayer implements Runnable{
 				Message m = (Message) Server.requests.getNext();
 				if (m != null) {
 					if (handle(m) != 0) {
+						System.err.println("error - mediaplayer could not handle message");
 						break;
 					}
 				} else {

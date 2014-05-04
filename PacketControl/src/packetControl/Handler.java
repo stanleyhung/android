@@ -52,6 +52,7 @@ public class Handler implements Runnable {
 	
 	public static void main(String[] args) {
 		Handler h = new Handler();
+		System.out.println("Running handler...");
 		h.run();
 	}
 

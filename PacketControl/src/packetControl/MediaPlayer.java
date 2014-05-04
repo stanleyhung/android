@@ -2,9 +2,7 @@ package packetControl;
 
 import java.awt.AWTException;
 import java.awt.Robot;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.LinkedList;
 
 
 //RobotControl handles the lower-level logic for interfacing with VLC Media Player through keystrokes
@@ -35,8 +33,7 @@ class MediaPlayer implements Runnable{
 	}
 	
 	
-	public static void main(String[] args) throws AWTException {
-		Server s = new Server();		
+	public static void main(String[] args) throws AWTException {		
 		MediaPlayer player = new MediaPlayer();
 		Message m = new Message(Message.QUIT);
 		Server.requests.addToQueue(m);

@@ -3,14 +3,12 @@ package packetControl;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class Handler implements Runnable {
 
-	private final static int DELAY = 500;
 	final static String SUCCESS = "success";
 	@Override
 	/*
@@ -51,6 +49,7 @@ public class Handler implements Runnable {
 				writer.write(Handler.SUCCESS, 0, Handler.SUCCESS.length());
 				writer.newLine();
 				writer.flush();
+				s.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 				break;

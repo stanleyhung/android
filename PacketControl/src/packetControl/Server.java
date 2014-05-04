@@ -1,7 +1,6 @@
 package packetControl;
 
 import java.awt.AWTException;
-import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,7 +14,6 @@ public class Server extends Thread {
 	private MediaPlayer robot;
 	static SynchronizedQueue requests; // Queue of Messages representing media player actions
 	static ExecutorService executor;
-	private Network network;
 	
 	
 	public Server() {

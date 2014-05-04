@@ -43,7 +43,7 @@ public class Message {
 		return myMessage;
 	}
 	
-	public boolean isValidCommand(String command) {
+	public static boolean isValidCommand(String command) {
 		return validCommands.containsKey(command);
 	}
 	/**

@@ -17,7 +17,7 @@ public class Network implements Runnable {
 	
 	private final static int PORT = 9;
 	private ServerSocket server;
-	SynchronizedQueue clients;
+	SynchronizedQueue clients; //Queue of sockets representing client connections
 	private boolean status;
 	private final static int TIMEOUT = 3000;
 	
@@ -44,7 +44,7 @@ public class Network implements Runnable {
 			return false;
 		}
 		status = false;
-		return false;
+		return true;
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
@@ -54,7 +54,7 @@ public class Network implements Runnable {
 		while (true) {
 			try {
 				if (status == true) {
-					Socket s = server.accept();
+					Socket s = server.accept(); //timeouts after TIMEOUT milliseconds
 					clients.addToQueue(s);
 				}
 			} catch (SocketTimeoutException e) {

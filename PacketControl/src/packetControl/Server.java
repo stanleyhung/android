@@ -33,9 +33,15 @@ public class Server extends Thread {
 		
 	}
 	
-	public static void main(String[] args) {
-		Server s = new Server();
+	public static void main(String[] args) throws InterruptedException {
+		final Server s = new Server();
 		ExecutorService executor = Executors.newFixedThreadPool(5);
+		executor.execute(new Runnable() {
+			public void run() {
+				s.robot.run();
+			}
+		});
+		Thread.sleep(3000);
 		executor.execute(new Runnable() {
 			public void run() {
 				Network.main(null);

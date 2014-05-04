@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.AbstractQueuedLongSynchronizer;
-import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 /**
  * @author Stanley
@@ -69,6 +66,17 @@ public class Network implements Runnable {
 				e.printStackTrace();
 				break;
 			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		Network n;
+		try {
+			n = new Network();
+			n.run();
+		} catch (IOException e) {
+			System.err.println("Network error");
+			e.printStackTrace();
 		}
 	}
 

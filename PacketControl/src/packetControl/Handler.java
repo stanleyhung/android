@@ -11,7 +11,10 @@ public class Handler implements Runnable {
 	 */
 	public void run() {
 		while (true) {
-			
+			Object o = Network.clients.getNext();
+			if (o != null) {
+				
+			}
 		}
 
 	}

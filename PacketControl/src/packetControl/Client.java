@@ -19,7 +19,7 @@ public class Client implements Runnable {
 			Thread.sleep(3000);
 			s = new Socket(InetAddress.getLocalHost(), Network.PORT);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
-			writer.write(new String(Message.PLAY), 0, Message.PLAY.length());
+			writer.write(new String(Message.QUIT), 0, Message.PLAY.length());
 			writer.newLine();
 			writer.flush();
 			System.out.println("client successfully sent request");

@@ -61,7 +61,7 @@ class MediaPlayer implements Runnable{
 						break;
 					}
 				} else {
-					break;
+					continue;
 				}
 			}
 			System.out.println("Done");

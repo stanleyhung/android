@@ -10,28 +10,24 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		//purely for testing purposes
-		ExecutorService network = Executors.newFixedThreadPool(1);
-		network.execute(new Runnable() {
+		ExecutorService executor = Executors.newFixedThreadPool(3);
+		executor.execute(new Runnable() {
 			public void run() {
 				Network.main(null);
 			}
 		});
-		ExecutorService handler = Executors.newFixedThreadPool(1);
-		handler.execute(new Runnable() {
+		executor.execute(new Runnable() {
 			public void run() {
 				Handler.main(null);
 			}
 		});
-		ExecutorService client = Executors.newFixedThreadPool(1);
-		client.execute(new Runnable() {
+		executor.execute(new Runnable() {
 			public void run() {
 				Client.main(null);
 			}
 		});
 		
-		network.shutdown();
-		handler.shutdown();
-		client.shutdown();
+		executor.shutdown();
 
 	}
 

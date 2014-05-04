@@ -42,7 +42,11 @@ public class Handler implements Runnable {
 				break;
 			}
 		}
-
+	}
+	
+	public static void main(String[] args) {
+		Handler h = new Handler();
+		h.run();
 	}
 
 }

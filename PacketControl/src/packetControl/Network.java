@@ -56,7 +56,9 @@ public class Network implements Runnable {
 		while (true) {
 			try {
 				if (status == true) {
+					System.out.println("network server listening for clients");
 					Socket s = server.accept(); //timeouts after TIMEOUT milliseconds
+					System.out.println("network server received client connection");
 					clients.addToQueue(s);
 					sem.release();
 				}

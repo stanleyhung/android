@@ -24,6 +24,7 @@ public class Handler implements Runnable {
 				if (Network.sem == null) {
 					continue;
 				}
+				System.out.println("handler waiting for server to add socket to queue");
 				Network.sem.acquire();
 			} catch (InterruptedException e) {
 				e.printStackTrace();

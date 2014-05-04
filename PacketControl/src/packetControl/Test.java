@@ -10,7 +10,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		//purely for testing purposes
-		ExecutorService executor = Executors.newFixedThreadPool(3);
+		ExecutorService executor = Executors.newFixedThreadPool(5);
 		executor.execute(new Runnable() {
 			public void run() {
 				Network.main(null);

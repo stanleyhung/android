@@ -22,12 +22,14 @@ public class Handler implements Runnable {
 		while (true) {
 			try {
 				if (Network.sem == null) {
-					System.out.println("Network.sem is null");
+					//System.out.println("Network.sem is null");
 					continue;
 				}
 				System.out.println("handler waiting for server to add socket to queue");
 				Network.sem.acquire();
+				System.out.println("acquired semaphore");
 			} catch (InterruptedException e) {
+				System.err.println("handler error");
 				e.printStackTrace();
 				break;
 			}

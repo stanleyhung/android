@@ -35,7 +35,24 @@ public class Server extends Thread {
 	
 	public static void main(String[] args) {
 		Server s = new Server();
-		s.run();
+		ExecutorService executor = Executors.newFixedThreadPool(5);
+		executor.execute(new Runnable() {
+			public void run() {
+				Network.main(null);
+			}
+		});
+		executor.execute(new Runnable() {
+			public void run() {
+				Handler.main(null);
+			}
+		});
+		executor.execute(new Runnable() {
+			public void run() {
+				Client.main(null);
+			}
+		});
+		
+		executor.shutdown();
 	}
 	
 }

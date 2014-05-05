@@ -54,9 +54,8 @@ public class MainActivity extends Activity {
 		return bytes;
 
 	}
-    /** Called when the user clicks the wake button */
-    public void handleWake(View view) {
-    	
+    
+    private boolean checkConnectivity() {
     	ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     	NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     	if (networkInfo != null && networkInfo.isConnected()) {
@@ -65,14 +64,21 @@ public class MainActivity extends Activity {
     		if (!ssid.equals(HOME)) {
     			textView.setText("Failure - Not Connected to 'Stanley' network");
     			Log.e(MainActivity.LOG_TAG, "SSID should be: " + HOME + ", but is: " + ssid + ".");
-    			return;
+    			return false;
     		}
-    		ExecuteWake ew = new ExecuteWake();
-    		ew.execute();
-    	} else {
-    		textView.setText("No network connection available.");
+    		return true;
     	}
+    	return false;
+    }
+    
+    /** Called when the user clicks the wake button */
+    public void handleWake(View view) {
     	
+    	if(!checkConnectivity()) {
+    		return;
+    	}
+    	ExecuteWake ew = new ExecuteWake();
+    	ew.execute();
     }
     
     /* Called when the user clicks to start remote button */

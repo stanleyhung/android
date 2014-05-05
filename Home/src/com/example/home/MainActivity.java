@@ -95,14 +95,20 @@ public class MainActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO Auto-generated method stub
-			return null;
+			return true;
 		}
 		
 		protected void onPostExecute(Boolean result) {
 			if (result == true) {
-				
+				startRemoteButton.setText("Success!");
+        		Handler h = new Handler();
+        		h.postDelayed(new Runnable() { 
+        	         public void run() { 
+        	        	 startRemoteButton.setText("Turn On Computer"); 
+        	         } 
+        	    }, 3000); 
 			} else {
-				
+				startRemoteButton.setText("FAILURE - Could not send packet");
 			}
 		}
     	

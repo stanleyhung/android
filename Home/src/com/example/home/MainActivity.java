@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
 	private final static String networkAddress = "192.168.1.255";
 	public final static String LOG_TAG = "HOME";
 	private TextView wakeButton;
+	private TextView startRemoteButton;
 	private final static String HOME = "\"Stanley\"";
 
     @Override
@@ -33,8 +34,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         wakeButton = (TextView) findViewById(R.id.myButton);
+        startRemoteButton = (TextView) findViewById(R.id.startButton);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,6 +100,8 @@ public class MainActivity extends Activity {
 		
 		protected void onPostExecute(Boolean result) {
 			if (result == true) {
+				
+			} else {
 				
 			}
 		}

@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
 	private TextView nextButton;
 	private TextView previousButton;
 	private TextView quitButton;
+	private TextView randomButton;
 	private Socket connection;
 	
     @Override
@@ -49,6 +50,7 @@ public class MainActivity extends Activity {
         nextButton = (TextView) findViewById(R.id.nextButton);
         previousButton = (TextView) findViewById(R.id.previousButton);
         quitButton = (TextView) findViewById(R.id.quitButton);
+        randomButton = (TextView) findViewById(R.id.randomButton);
     }
 
     @Override
@@ -117,6 +119,10 @@ public class MainActivity extends Activity {
     
     public void handleQuit(View view) {
     	sendMessage(Message.QUIT);
+    }
+    
+    public void handleRandom(View view) {
+    	sendMessage(Message.RANDOM);
     }
     
     //initializes the logic to send a packet to the computer
@@ -200,6 +206,7 @@ public class MainActivity extends Activity {
 				nextButton.setText("Next");
 				previousButton.setText("Previous");
 				quitButton.setText("Quit");
+				randomButton.setText("Random");
 			}
 			
 			//reset button's text after 3 seconds 
@@ -277,6 +284,7 @@ public class MainActivity extends Activity {
     	final static String PREVIOUS = "previous";
     	final static String QUIT = "quit";
     	final static String MAGIC = "Turn On";
+    	final static String RANDOM = "random";
     	
     	private String myMessage;
     	

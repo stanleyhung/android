@@ -2,6 +2,7 @@ package packetControl;
 
 import java.awt.AWTException;
 import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.io.IOException;
 
 
@@ -49,7 +50,11 @@ class MediaPlayer implements Runnable{
 		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", "C:\\Users\\Stanley\\Documents\\Music\\"};
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
-			//Thread.sleep(5000);
+			Thread.sleep(3000);
+			robot.mouseMove(0, 50);
+			int mask = InputEvent.getMaskForButton(1);
+			robot.mousePress(mask);
+			robot.mouseRelease(mask);
 			while (true) {
 				if (Server.requests == null) {
 					break;
@@ -69,7 +74,7 @@ class MediaPlayer implements Runnable{
 			}
 			System.out.println("Done");
 			p.destroy();
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Server.FAILURE;

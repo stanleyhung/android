@@ -35,7 +35,6 @@ public class MainActivity extends Activity {
 	private TextView startRemoteButton;
 	private TextView stopButton;
 	private TextView playButton;
-	private TextView pauseButton;
 	private TextView nextButton;
 	private TextView previousButton;
 	private TextView quitButton;
@@ -49,7 +48,6 @@ public class MainActivity extends Activity {
         startRemoteButton = (TextView) findViewById(R.id.startButton);
         stopButton = (TextView) findViewById(R.id.stopButton);
         playButton = (TextView) findViewById(R.id.playButton);
-        pauseButton = (TextView) findViewById(R.id.pauseButton);
         nextButton = (TextView) findViewById(R.id.nextButton);
         previousButton = (TextView) findViewById(R.id.previousButton);
         quitButton = (TextView) findViewById(R.id.quitButton);
@@ -115,10 +113,6 @@ public class MainActivity extends Activity {
     	sendMessage(Message.PLAY);
     }
     
-    public void handlePause(View view) {
-    	sendMessage(Message.PAUSE);
-    }
-    
     public void handleNext(View view) {
     	sendMessage(Message.NEXT);
     }
@@ -167,23 +161,13 @@ public class MainActivity extends Activity {
 			//send the cmd message to the remote computer
 			InetAddress temp;
 			try {
-				if (cmd[0].equals(Message.MAGIC)) {
-					//need to initialize connection if MAGIC packet
-					temp = InetAddress.getByName("10.10.10.69"); //TODO: find some dynamic way to get IP addr
-					connection = new Socket(temp, PORT);
-				}
-				if (connection == null) {
-					Log.e(MainActivity.LOG_TAG, "Error - connection not initialized but request wanted");
-					return new Output(cmd[0], false);
-				}
+				temp = InetAddress.getByName("10.10.10.69"); //TODO: find some dynamic way to get IP addr
+				connection = new Socket(temp, PORT);
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
 				writer.write(cmd[0], 0, cmd[0].length());
 				writer.newLine();
 				writer.flush();
-				if (cmd[0].equals(Message.QUIT)) {
-					//need to close connection if QUIT
-					connection.close();
-				}
+				connection.close();
 			} catch (UnknownHostException e) {
 				Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
 				return new Output(cmd[0], false);
@@ -204,8 +188,6 @@ public class MainActivity extends Activity {
 				correctButton = stopButton;
 			} else if(buttonName.equals(Message.PLAY)) {
 				correctButton = playButton;
-			} else if(buttonName.equals(Message.PAUSE)) {
-				correctButton = pauseButton;
 			} else if(buttonName.equals(Message.NEXT)) {
 				correctButton = nextButton;
 			} else if(buttonName.equals(Message.PREVIOUS)) {
@@ -216,31 +198,38 @@ public class MainActivity extends Activity {
 				startRemoteButton.setText("FAILURE - FATAL, BAD BAD BAD");
 			}
 			if (result.getSuccess()) {
-				correctButton.setText("Success!");
+				correctButton.setText("Sending packet...");
 			} else {
 				correctButton.setText("FAILURE - Could not send packet");
 			}
 			
 			//additional work needed for special cases
-			if (buttonName.equals(Message.MAGIC)) {
+			if (result.getSuccess() && buttonName.equals(Message.MAGIC)) {
 				//start magic packet -> need to initialize all other buttons
 				stopButton.setText("Stop");
 				playButton.setText("Play");
-				pauseButton.setText("Pause");
 				nextButton.setText("Next");
 				previousButton.setText("Previous");
 				quitButton.setText("Quit");
 			} 
-			if (buttonName.equals(Message.QUIT)) {
+			if (result.getSuccess() && buttonName.equals(Message.QUIT)) {
 				//quit -> need to reset all other buttons
 				stopButton.setText("Turn On VLC To Show Command");
 				playButton.setText("Turn On VLC To Show Command");
-				pauseButton.setText("Turn On VLC To Show Command");
 				nextButton.setText("Turn On VLC To Show Command");
 				previousButton.setText("Turn On VLC To Show Command");
 				startRemoteButton.setText("Start VLC On Computer");
 			}
 			
+			//reset button's text after 3 seconds 
+			final TextView button = correctButton;
+			final String buttonText = buttonName;
+			Handler h = new Handler();
+    		h.postDelayed(new Runnable() { 
+    	         public void run() { 
+    	        	 button.setText(buttonText); 
+    	         } 
+    	    }, 3000);
 		}
     	
     }
@@ -304,7 +293,6 @@ public class MainActivity extends Activity {
     private class Message {
     	final static String STOP = "stop";
     	final static String PLAY = "play";
-    	final static String PAUSE = "pause";
     	final static String NEXT = "next";
     	final static String PREVIOUS = "previous";
     	final static String QUIT = "quit";

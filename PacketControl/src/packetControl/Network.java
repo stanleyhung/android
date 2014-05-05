@@ -64,6 +64,8 @@ public class Network implements Runnable {
 					clients.addToQueue(s);
 					System.out.println("releasing semaphore");
 					sem.release();
+				} else {
+					return;
 				}
 			} catch (SocketTimeoutException e) {
 				//System.out.println("network server timed-out");

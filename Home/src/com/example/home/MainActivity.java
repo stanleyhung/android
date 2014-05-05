@@ -192,6 +192,8 @@ public class MainActivity extends Activity {
 				correctButton = previousButton;
 			} else if(buttonName.equals(Message.QUIT)) {
 				correctButton = quitButton;
+			} else if (buttonName.equals(Message.RANDOM)) {
+				correctButton = randomButton;
 			} else {
 				startRemoteButton.setText("FAILURE - FATAL, BAD BAD BAD");
 			}

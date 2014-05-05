@@ -37,7 +37,7 @@ public class Client implements Runnable {
 			e.printStackTrace();
 			return;
 		}
-		
+		System.out.println("client finished");
 	}
 
 	/**

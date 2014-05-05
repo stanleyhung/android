@@ -28,7 +28,6 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	
 	private final static String macAddress = "00.1D.60.88.57.46";
-	private final static String networkAddress = "192.168.1.255";
 	private final static int PORT = 9; //Wake-On Lan port
 	public final static String LOG_TAG = "HOME";
 	private final static String HOME = "\"Stanley\"";
@@ -95,6 +94,7 @@ public class MainActivity extends Activity {
     		wakeButton.setText("Failure - Not Connected to 'Stanley' network");
     		return;
     	}
+    	remoteComputer = findMacOnNetwork();
     	ExecuteWake ew = new ExecuteWake();
     	ew.execute();
     }
@@ -305,9 +305,8 @@ public class MainActivity extends Activity {
 				bytes[i] = macAddressBytes[i % 6];
 			}
 
-			byte[] network = getAddressBytes(networkAddress, 10);
 			try {
-				InetAddress ipAddress = InetAddress.getByAddress(network);
+				InetAddress ipAddress = remoteComputer;
 				DatagramPacket packet = new DatagramPacket(bytes, bytes.length, ipAddress,80);
 				DatagramSocket socket = new DatagramSocket();
 				socket.send(packet);

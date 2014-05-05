@@ -39,6 +39,7 @@ public class MainActivity extends Activity {
 	private TextView nextButton;
 	private TextView previousButton;
 	private TextView quitButton;
+	private Socket connection;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,12 +117,11 @@ public class MainActivity extends Activity {
 			InetAddress temp;
 			try {
 				temp = InetAddress.getByName("10.10.10.69");
-				Socket s = new Socket(temp, PORT);
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+				connection = new Socket(temp, PORT);
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
 				writer.write(new String(Message.MAGIC), 0, Message.MAGIC.length());
 				writer.newLine();
 				writer.flush();
-				s.close();
 			} catch (UnknownHostException e) {
 				Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
 				return false;

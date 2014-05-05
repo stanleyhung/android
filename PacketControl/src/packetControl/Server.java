@@ -4,6 +4,8 @@ import java.awt.AWTException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -40,9 +42,12 @@ public class Server {
 	
 	public void run() throws IOException {
 		//listens for the magic packet that instructs the majority of this java app to run
-		ServerSocket server = new ServerSocket(Network.PORT);
-		System.out.println("master listening for magic packet");
+		ServerSocket server = new ServerSocket();
+		server.bind(new InetSocketAddress(InetAddress.getLocalHost(), Network.PORT));
+		System.out.println("master listening for magic packet on");
+		System.out.print(InetAddress.getLocalHost());
 		Socket s = server.accept();
+		System.out.println("master got magic packet");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		reader.readLine();
 		server.close();

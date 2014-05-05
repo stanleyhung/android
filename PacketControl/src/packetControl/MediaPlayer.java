@@ -30,7 +30,7 @@ class MediaPlayer implements Runnable{
 			e.printStackTrace();
 			return -1;
 		}
-		if (m.getMessage() == Message.QUIT) {
+		if (m.getMessage().equals(Message.QUIT)) {
 			return QUIT;
 		}
 		return 0;

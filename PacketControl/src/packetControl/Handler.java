@@ -50,6 +50,9 @@ public class Handler implements Runnable {
 				writer.newLine();
 				writer.flush();
 				s.close();
+				if (m.getMessage().equals(Message.QUIT)) {
+					return;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				break;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -24,11 +25,13 @@ public class MainActivity extends Activity {
 	
 	private final static String macAddress = "00.1D.60.88.57.46";
 	private final static String networkAddress = "192.168.1.255";
+	private final static int PORT = 9; //Wake-On Lan port
 	public final static String LOG_TAG = "HOME";
+	private final static String HOME = "\"Stanley\"";
+	
 	private TextView wakeButton;
 	private TextView startRemoteButton;
-	private final static String HOME = "\"Stanley\"";
-
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +99,17 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
+			InetAddress temp;
+			try {
+				temp = InetAddress.getByName("10.10.10.69");
+				Socket s = new Socket(temp, PORT);
+			} catch (UnknownHostException e) {
+				Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
+				return false;
+			} catch (IOException e) {
+				Log.e(MainActivity.LOG_TAG, "Error - IO Exception");
+				return false;
+			}
 			return true;
 		}
 		

@@ -20,6 +20,7 @@ class MediaPlayer implements Runnable{
 	
 	public int handle(Message m) {
 		try {
+			System.out.println("VLC handling message: " + m.getMessage());
 			for (int key : m.getKeys()) {
 				robot.keyPress(key);
 			}

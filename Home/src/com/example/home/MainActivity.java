@@ -73,7 +73,6 @@ public class MainActivity extends Activity {
     
     /** Called when the user clicks the wake button */
     public void handleWake(View view) {
-    	
     	if(!checkConnectivity()) {
     		return;
     	}
@@ -83,6 +82,20 @@ public class MainActivity extends Activity {
     
     /* Called when the user clicks to start remote button */
     public void handleStartRemote(View view) {
+    	if(!checkConnectivity()) {
+    		return;
+    	}
+    	ExecuteStartRemote er = new ExecuteStartRemote();
+    	er.execute();
+    }
+    
+    private class ExecuteStartRemote extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
     	
     }
     

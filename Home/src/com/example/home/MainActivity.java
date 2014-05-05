@@ -25,14 +25,14 @@ public class MainActivity extends Activity {
 	private final static String macAddress = "00.1D.60.88.57.46";
 	private final static String networkAddress = "192.168.1.255";
 	public final static String LOG_TAG = "HOME";
-	private TextView textView;
+	private TextView wakeButton;
 	private final static String HOME = "\"Stanley\"";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = (TextView) findViewById(R.id.myButton);
+        wakeButton = (TextView) findViewById(R.id.myButton);
     }
 
 
@@ -62,7 +62,6 @@ public class MainActivity extends Activity {
     		WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
     		String ssid = wm.getConnectionInfo().getSSID();
     		if (!ssid.equals(HOME)) {
-    			textView.setText("Failure - Not Connected to 'Stanley' network");
     			Log.e(MainActivity.LOG_TAG, "SSID should be: " + HOME + ", but is: " + ssid + ".");
     			return false;
     		}
@@ -74,6 +73,7 @@ public class MainActivity extends Activity {
     /** Called when the user clicks the wake button */
     public void handleWake(View view) {
     	if(!checkConnectivity()) {
+    		wakeButton.setText("Failure - Not Connected to 'Stanley' network");
     		return;
     	}
     	ExecuteWake ew = new ExecuteWake();
@@ -95,6 +95,12 @@ public class MainActivity extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+		
+		protected void onPostExecute(Boolean result) {
+			if (result == true) {
+				
+			}
 		}
     	
     }
@@ -139,15 +145,15 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean result) {
         	if (result == true) {
-        		textView.setText("Success!");
+        		wakeButton.setText("Success!");
         		Handler h = new Handler();
         		h.postDelayed(new Runnable() { 
         	         public void run() { 
-        	              textView.setText("Turn On Computer"); 
+        	        	 wakeButton.setText("Turn On Computer"); 
         	         } 
         	    }, 3000); 
         	} else {
-        		textView.setText("FAILURE - Could not send packet");
+        		wakeButton.setText("FAILURE - Could not send packet");
         	}
             
        }

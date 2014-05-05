@@ -18,9 +18,9 @@ public class Handler implements Runnable {
 					//System.out.println("Network.sem is null");
 					continue;
 				}
-				System.out.println("handler waiting for server to add socket to queue");
+				//System.out.println("handler waiting for server to add socket to queue");
 				Network.sem.acquire();
-				System.out.println("acquired semaphore");
+				//System.out.println("acquired semaphore");
 			} catch (InterruptedException e) {
 				System.err.println("handler error");
 				e.printStackTrace();
@@ -40,6 +40,7 @@ public class Handler implements Runnable {
 				}
 				Message m = new Message(command);
 				Server.requests.addToQueue(m);
+				System.out.println("handler processed message: " + command);
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 				writer.write(Handler.SUCCESS, 0, Handler.SUCCESS.length());
 				writer.newLine();

@@ -106,8 +106,8 @@ public class MainActivity extends Activity {
     		return;
     	}
     	*/
-    	ExecuteStartRemote er = new ExecuteStartRemote();
-    	er.execute();
+    	ExecuteMediaControl er = new ExecuteMediaControl();
+    	er.execute(Message.MAGIC);
     }
     
     public void handleStop(View view) {
@@ -134,16 +134,16 @@ public class MainActivity extends Activity {
     	
     }
     
-    private class ExecuteStartRemote extends AsyncTask<Void, Void, Boolean> {
+    private class ExecuteMediaControl extends AsyncTask<String, Void, Boolean> {
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected Boolean doInBackground(String... cmd) {
 			InetAddress temp;
 			try {
 				temp = InetAddress.getByName("10.10.10.69");
 				connection = new Socket(temp, PORT);
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-				writer.write(new String(Message.MAGIC), 0, Message.MAGIC.length());
+				writer.write(cmd[0], 0, Message.MAGIC.length());
 				writer.newLine();
 				writer.flush();
 			} catch (UnknownHostException e) {

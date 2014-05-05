@@ -134,10 +134,32 @@ public class MainActivity extends Activity {
     	
     }
     
-    private class ExecuteMediaControl extends AsyncTask<String, Void, Boolean> {
+    public void handleMediaControl(View view) {
+    	
+    }
+    
+    private class Output {
+    	private String type;
+    	private boolean success;
+    	
+    	public Output(String type, boolean success) {
+    		this.type = type;
+    		this.success = success;
+    	}
+    	
+    	public String getType() {
+    		return type;
+    	}
+    	
+    	public boolean getSuccess() {
+    		return success;
+    	}
+    }
+    
+    private class ExecuteMediaControl extends AsyncTask<String, Void, Output> {
 
 		@Override
-		protected Boolean doInBackground(String... cmd) {
+		protected Output doInBackground(String... cmd) {
 			InetAddress temp;
 			try {
 				temp = InetAddress.getByName("10.10.10.69");
@@ -148,20 +170,39 @@ public class MainActivity extends Activity {
 				writer.flush();
 			} catch (UnknownHostException e) {
 				Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
-				return false;
+				return new Output(cmd[0], false);
 			} catch (IOException e) {
 				Log.e(MainActivity.LOG_TAG, "Error - IO Exception");
 				Log.e(MainActivity.LOG_TAG, e.getMessage());
-				return false;
+				return new Output(cmd[0], false);
 			}
-			return true;
+			return new Output(cmd[0], true);
 		}
 		
-		protected void onPostExecute(Boolean result) {
-			if (result == true) {
-				startRemoteButton.setText("Success!");
+		protected void onPostExecute(Output result) {
+			TextView correctButton = null;
+			String buttonName = result.getType();
+			if (buttonName.equals(Message.MAGIC)) {
+				correctButton = startRemoteButton;
+			} else if(buttonName.equals(Message.STOP)) {
+				correctButton = stopButton;
+			} else if(buttonName.equals(Message.PLAY)) {
+				correctButton = playButton;
+			} else if(buttonName.equals(Message.PAUSE)) {
+				correctButton = pauseButton;
+			} else if(buttonName.equals(Message.NEXT)) {
+				correctButton = nextButton;
+			} else if(buttonName.equals(Message.PREVIOUS)) {
+				correctButton = previousButton;
+			} else if(buttonName.equals(Message.QUIT)) {
+				correctButton = quitButton;
 			} else {
-				startRemoteButton.setText("FAILURE - Could not send packet");
+				startRemoteButton.setText("FAILURE - FATAL, BAD BAD BAD");
+			}
+			if (result.getSuccess()) {
+				correctButton.setText("Success!");
+			} else {
+				correctButton.setText("FAILURE - Could not send packet");
 			}
 		}
     	

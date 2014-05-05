@@ -170,7 +170,7 @@ public class MainActivity extends Activity {
 				temp = InetAddress.getByName("10.10.10.69");
 				connection = new Socket(temp, PORT);
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-				writer.write(cmd[0], 0, Message.MAGIC.length());
+				writer.write(cmd[0], 0, cmd[0].length());
 				writer.newLine();
 				writer.flush();
 			} catch (UnknownHostException e) {

@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
 
 	}
     /** Called when the user clicks the wake button */
-    public void handleClick(View view) {
+    public void handleWake(View view) {
     	
     	ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     	NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

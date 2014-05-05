@@ -110,6 +110,30 @@ public class MainActivity extends Activity {
     	er.execute();
     }
     
+    public void handleStop(View view) {
+    	
+    }
+    
+    public void handlePlay(View view) {
+    	
+    }
+    
+    public void handlePause(View view) {
+    	
+    }
+    
+    public void handleNext(View view) {
+    	
+    }
+    
+    public void handlePrevious(View view) {
+    	
+    }
+    
+    public void handleQuit(View view) {
+    	
+    }
+    
     private class ExecuteStartRemote extends AsyncTask<Void, Void, Boolean> {
 
 		@Override

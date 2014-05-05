@@ -33,7 +33,6 @@ public class MainActivity extends Activity {
 	
 	private TextView wakeButton;
 	private TextView startRemoteButton;
-	private TextView stopButton;
 	private TextView playButton;
 	private TextView nextButton;
 	private TextView previousButton;
@@ -46,7 +45,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         wakeButton = (TextView) findViewById(R.id.myButton);
         startRemoteButton = (TextView) findViewById(R.id.startButton);
-        stopButton = (TextView) findViewById(R.id.stopButton);
         playButton = (TextView) findViewById(R.id.playButton);
         nextButton = (TextView) findViewById(R.id.nextButton);
         previousButton = (TextView) findViewById(R.id.previousButton);
@@ -103,10 +101,6 @@ public class MainActivity extends Activity {
     
     public void handleStartRemote(View view) {
     	sendMessage(Message.MAGIC);
-    }
-    
-    public void handleStop(View view) {
-    	sendMessage(Message.STOP);
     }
     
     public void handlePlay(View view) {
@@ -184,8 +178,6 @@ public class MainActivity extends Activity {
 			String buttonName = result.getType();
 			if (buttonName.equals(Message.MAGIC)) {
 				correctButton = startRemoteButton;
-			} else if(buttonName.equals(Message.STOP)) {
-				correctButton = stopButton;
 			} else if(buttonName.equals(Message.PLAY)) {
 				correctButton = playButton;
 			} else if(buttonName.equals(Message.NEXT)) {
@@ -206,7 +198,6 @@ public class MainActivity extends Activity {
 			//additional work needed for special cases
 			if (result.getSuccess() && buttonName.equals(Message.MAGIC)) {
 				//start magic packet -> need to initialize all other buttons
-				stopButton.setText("Stop");
 				playButton.setText("Play");
 				nextButton.setText("Next");
 				previousButton.setText("Previous");
@@ -214,7 +205,6 @@ public class MainActivity extends Activity {
 			} 
 			if (result.getSuccess() && buttonName.equals(Message.QUIT)) {
 				//quit -> need to reset all other buttons
-				stopButton.setText("Turn On VLC To Show Command");
 				playButton.setText("Turn On VLC To Show Command");
 				nextButton.setText("Turn On VLC To Show Command");
 				previousButton.setText("Turn On VLC To Show Command");
@@ -291,7 +281,6 @@ public class MainActivity extends Activity {
     
     //Class for communication with remote computer
     private class Message {
-    	final static String STOP = "stop";
     	final static String PLAY = "play";
     	final static String NEXT = "next";
     	final static String PREVIOUS = "previous";

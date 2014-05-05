@@ -31,5 +31,53 @@
         android:layout_height="wrap_content"
         android:text="@string/start_remote" 
         android:onClick="handleStartRemote"/>
+    
+   <Button
+        android:id="@+id/stopButton"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/off_string" 
+        android:onClick="handleStop"/>
+   
+   <Button
+        android:id="@+id/playButton"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/off_string" 
+        android:onClick="handlePlay"/>
+   
+   <Button
+        android:id="@+id/pauseButton"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/off_string" 
+        android:onClick="handlePause"/>
+   
+   <Button
+        android:id="@+id/nextButton"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/off_string" 
+        android:onClick="handleNext"/>
+   
+   <Button
+        android:id="@+id/previousButton"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/off_string" 
+        android:onClick="handlePause"/>
+   
+   <Button
+        android:id="@+id/quitButton"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/off_string" 
+        android:onClick="handleQuit"/>
 
 </LinearLayout>

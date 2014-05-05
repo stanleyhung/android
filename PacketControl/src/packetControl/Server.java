@@ -1,6 +1,7 @@
 package packetControl;
 
 import java.awt.AWTException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -19,9 +20,8 @@ public class Server extends Thread {
 	private MediaPlayer robot;
 	static SynchronizedQueue requests; // Queue of Messages representing media player actions
 	static ExecutorService executor;
-	public final static String SUCCESS = "adsklfjklajsklfdjdskl";
-	public final static String FAILURE = "adsklfjaklsjfd";
-	
+	public final static String SUCCESS = "SUCCESS";
+	public final static String FAILURE = "FAILURE";
 	
 	public Server() {
 		try {
@@ -38,18 +38,20 @@ public class Server extends Thread {
 		
 	}
 	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		final Server s = new Server();
 		ExecutorService executor = Executors.newFixedThreadPool(5);
 		ArrayList<Future<String>> results = new ArrayList<Future<String>>();
+		final Network n = new Network();
+		n.turnOn();
+		executor.submit(new Callable<String>() {
+			public String call() {
+				return n.call();
+			}
+		});
 		results.add(executor.submit(new Callable<String>() {
 			public String call() {
 				return s.robot.call();
-			}
-		}));
-		results.add(executor.submit(new Callable<String>() {
-			public String call() {
-				return Network.call();
 			}
 		}));
 		results.add(executor.submit(new Callable<String>() {
@@ -69,10 +71,12 @@ public class Server extends Thread {
 			for (Future<String> result : results) {
 				try {
 					String value = result.get();
-					if (value != Server.SUCCESS) {
+					if (!value.equals(Server.SUCCESS)) {
+						System.err.println(value);
 						done = false;
 					}
 				} catch (ExecutionException e) {
+					e.printStackTrace();
 					done = false;
 				}
 			}
@@ -80,6 +84,7 @@ public class Server extends Thread {
 				break;
 			}
 		}
+		n.turnOff();
 		System.out.println("Master shutting down");
 		executor.shutdown();
 	}

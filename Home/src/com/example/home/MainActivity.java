@@ -177,9 +177,18 @@ public class MainActivity extends Activity {
     	return false;
     }
     
-    //scan a networkAddr for a list of all reachable ipaddrs on that network
+    //scan a networkAddr for a list of all reachable ipAddresses on that network
     private LinkedList<InetAddress> scanNetwork(int networkAddr) {
     	LinkedList<InetAddress> output = new LinkedList<InetAddress>();
+    	for (int i = 0; i < 255; i++) {
+    		String deviceAddr = String.format("%d.%d.%d.%d",
+    				(networkAddr & 0xff),
+    				(networkAddr >> 8 & 0xff),
+    				(networkAddr >> 16 & 0xff),
+    				i);
+    		
+    	}
+    	InetAddress network = InetAddress.getByName(ipString);
     	return output;
     }
     

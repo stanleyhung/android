@@ -167,12 +167,19 @@ public class MainActivity extends Activity {
 			//send the cmd message to the remote computer
 			InetAddress temp;
 			try {
-				temp = InetAddress.getByName("10.10.10.69");
-				connection = new Socket(temp, PORT);
+				if (cmd[0].equals(Message.MAGIC)) {
+					//need to initialize connection if MAGIC packet
+					temp = InetAddress.getByName("10.10.10.69"); //TODO: find some dynamic way to get IP addr
+					connection = new Socket(temp, PORT);
+				}
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
 				writer.write(cmd[0], 0, cmd[0].length());
 				writer.newLine();
 				writer.flush();
+				if (cmd[0].equals(Message.QUIT)) {
+					//need to close connection if QUIT
+					connection.close();
+				}
 			} catch (UnknownHostException e) {
 				Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
 				return new Output(cmd[0], false);

@@ -33,6 +33,12 @@ public class MainActivity extends Activity {
 	
 	private TextView wakeButton;
 	private TextView startRemoteButton;
+	private TextView stopButton;
+	private TextView playButton;
+	private TextView pauseButton;
+	private TextView nextButton;
+	private TextView previousButton;
+	private TextView quitButton;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,12 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         wakeButton = (TextView) findViewById(R.id.myButton);
         startRemoteButton = (TextView) findViewById(R.id.startButton);
+        stopButton = (TextView) findViewById(R.id.stopButton);
+        playButton = (TextView) findViewById(R.id.playButton);
+        pauseButton = (TextView) findViewById(R.id.pauseButton);
+        nextButton = (TextView) findViewById(R.id.nextButton);
+        previousButton = (TextView) findViewById(R.id.previousButton);
+        quitButton = (TextView) findViewById(R.id.quitButton);
     }
 
     @Override
@@ -115,6 +127,7 @@ public class MainActivity extends Activity {
 				return false;
 			} catch (IOException e) {
 				Log.e(MainActivity.LOG_TAG, "Error - IO Exception");
+				Log.e(MainActivity.LOG_TAG, e.getMessage());
 				return false;
 			}
 			return true;

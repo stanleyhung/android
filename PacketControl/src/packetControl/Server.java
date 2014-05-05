@@ -2,7 +2,9 @@ package packetControl;
 
 import java.awt.AWTException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -39,29 +41,46 @@ public class Server extends Thread {
 	public static void main(String[] args) throws InterruptedException {
 		final Server s = new Server();
 		ExecutorService executor = Executors.newFixedThreadPool(5);
-		ArrayList<Callable<String>> threads = new ArrayList<Callable<String>>();
-		executor.submit(new Callable<String>() {
+		ArrayList<Future<String>> results = new ArrayList<Future<String>>();
+		results.add(executor.submit(new Callable<String>() {
 			public String call() {
 				return s.robot.call();
 			}
-		});
-		threads.add(new Callable<String>() {
+		}));
+		results.add(executor.submit(new Callable<String>() {
 			public String call() {
 				return Network.call();
 			}
-		});
-		threads.add(new Callable<String>() {
+		}));
+		results.add(executor.submit(new Callable<String>() {
 			public String call() {
 				return Handler.call();
 			}
-		});
-		threads.add(new Callable<String>() {
+		}));
+		results.add(executor.submit(new Callable<String>() {
 			public String call() {
 				return Client.call();
 			}
-		});
-		Thread.sleep(3000);
+		}));
 		
+		while (true) {
+			System.out.println("Master checking for completion");
+			boolean done = true;
+			for (Future<String> result : results) {
+				try {
+					String value = result.get();
+					if (value != Server.SUCCESS) {
+						done = false;
+					}
+				} catch (ExecutionException e) {
+					done = false;
+				}
+			}
+			if (done == true) {
+				break;
+			}
+		}
+		System.out.println("Master shutting down");
 		executor.shutdown();
 	}
 	

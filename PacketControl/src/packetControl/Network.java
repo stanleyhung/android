@@ -18,9 +18,9 @@ import java.util.concurrent.Semaphore;
 public class Network implements Runnable {
 	
 	public final static int PORT = 9;
-	private static ServerSocket server;
+	private ServerSocket server;
 	static SynchronizedQueue clients; //Queue of sockets representing client connections
-	private static boolean status;
+	private boolean status;
 	private final static int TIMEOUT = 3000;
 	final static Semaphore sem = new Semaphore(0);
 	
@@ -51,11 +51,19 @@ public class Network implements Runnable {
 	}
 	
 	public static String call() {
+		Network n;
+		try {
+			n = new Network();
+		} catch (IOException e1) {
+			System.err.println("could not create a network server");
+			return Server.FAILURE;
+		}
+		n.turnOn();
 		while (true) {
 			try {
-				if (status == true) {
-					//System.out.println("network server listening for clients");
-					Socket s = server.accept(); //timeouts after TIMEOUT milliseconds
+				if (n.status == true) {
+					System.out.println("network server listening for clients");
+					Socket s = n.server.accept(); //timeouts after TIMEOUT milliseconds
 					System.out.println("network server received client connection");
 					clients.addToQueue(s);
 					System.out.println("releasing semaphore");

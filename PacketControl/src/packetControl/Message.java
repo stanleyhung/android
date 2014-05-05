@@ -20,8 +20,8 @@ public class Message {
 	static {
 		validCommands = new HashMap<String, int[]>();
 		validCommands.put(STOP, new int[] {KeyEvent.VK_S});
-		validCommands.put(PLAY, new int[] {KeyEvent.VK_CLOSE_BRACKET});
-		validCommands.put(PAUSE, new int[] {KeyEvent.VK_OPEN_BRACKET});
+		validCommands.put(PLAY, new int[] {KeyEvent.VK_SPACE});
+		validCommands.put(PAUSE, new int[] {KeyEvent.VK_SPACE});
 		validCommands.put(NEXT, new int[] {KeyEvent.VK_N});
 		validCommands.put(PREVIOUS, new int[] {KeyEvent.VK_P});
 		validCommands.put(QUIT, new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_Q});

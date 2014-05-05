@@ -189,9 +189,7 @@ public class MainActivity extends Activity {
 			} else {
 				startRemoteButton.setText("FAILURE - FATAL, BAD BAD BAD");
 			}
-			if (result.getSuccess()) {
-				correctButton.setText("Sending packet...");
-			} else {
+			if (!result.getSuccess()) {
 				correctButton.setText("FAILURE - Could not send packet");
 			}
 			
@@ -202,13 +200,6 @@ public class MainActivity extends Activity {
 				nextButton.setText("Next");
 				previousButton.setText("Previous");
 				quitButton.setText("Quit");
-			} 
-			if (result.getSuccess() && buttonName.equals(Message.QUIT)) {
-				//quit -> need to reset all other buttons
-				playButton.setText("Turn On VLC To Show Command");
-				nextButton.setText("Turn On VLC To Show Command");
-				previousButton.setText("Turn On VLC To Show Command");
-				startRemoteButton.setText("Start VLC On Computer");
 			}
 			
 			//reset button's text after 3 seconds 

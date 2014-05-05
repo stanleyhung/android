@@ -109,6 +109,7 @@ public class MainActivity extends Activity {
 				writer.write(new String(Message.MAGIC), 0, Message.MAGIC.length());
 				writer.newLine();
 				writer.flush();
+				s.close();
 			} catch (UnknownHostException e) {
 				Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
 				return false;

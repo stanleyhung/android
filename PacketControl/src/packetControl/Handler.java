@@ -20,15 +20,15 @@ public class Handler implements Runnable {
 				}
 				//System.out.println("handler waiting for server to add socket to queue");
 				Network.sem.acquire();
-				//System.out.println("acquired semaphore");
+				System.out.println("acquired semaphore");
 			} catch (InterruptedException e) {
-				System.err.println("handler error");
+				System.err.println("HANDLER ERROR, EXITING");
 				e.printStackTrace();
 				break;
 			}
 			Object o = Network.clients.getNext();
 			if (o == null) {
-				System.err.println("Fatal error - not object in queue after semaphore acquired by handler");
+				System.err.println("FATAL ERROR - not object in queue after semaphore acquired by handler");
 				break;
 			}
 			Socket s = (Socket) o;

@@ -209,6 +209,27 @@ public class MainActivity extends Activity {
 			} else {
 				correctButton.setText("FAILURE - Could not send packet");
 			}
+			
+			//additional work needed for special cases
+			if (buttonName.equals(Message.MAGIC)) {
+				//start magic packet -> need to initialize all other buttons
+				stopButton.setText("Stop");
+				playButton.setText("Play");
+				pauseButton.setText("Pause");
+				nextButton.setText("Next");
+				previousButton.setText("Previous");
+				quitButton.setText("Quit");
+			} 
+			if (buttonName.equals(Message.QUIT)) {
+				//quit -> need to reset all other buttons
+				stopButton.setText("Turn On VLC To Show Command");
+				playButton.setText("Turn On VLC To Show Command");
+				pauseButton.setText("Turn On VLC To Show Command");
+				nextButton.setText("Turn On VLC To Show Command");
+				previousButton.setText("Turn On VLC To Show Command");
+				startRemoteButton.setText("Start VLC On Computer");
+			}
+			
 		}
     	
     }

@@ -32,6 +32,8 @@ public class MainActivity extends Activity {
 	private final static int PORT = 9; //Wake-On Lan port
 	public final static String LOG_TAG = "HOME";
 	private final static String HOME = "\"HungFamily-5G\"";
+	private final static int TIMEOUT = 100;
+	private static String TEMP = "10.10.10.69";
 	
 	private TextView wakeButton;
 	private TextView startRemoteButton;
@@ -40,7 +42,7 @@ public class MainActivity extends Activity {
 	private TextView previousButton;
 	private TextView quitButton;
 	private TextView randomButton;
-	private InetAddress remoteComputer;
+	private static InetAddress remoteComputer;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +178,7 @@ public class MainActivity extends Activity {
     //checks to see if ipAddr is assigned to device with macAddr
     private boolean checkCorrectAddress(String macAddr, InetAddress ipAddr) {
     	try {
-    		NetworkInterface device = NetworkInterface.getByInetAddress(ipAddr);
+    		NetworkInterface device = NetworkInterface.getByInetAddress(ipAddr); //TODO: doesn't work for remote machines
 			byte[] addr = device.getHardwareAddress();
 			String addrStr = String.format("%x%x.%x%x.%x%x.%x%x.%x%x.%x%x",
 					(addr[0] & 0xf),
@@ -194,6 +196,7 @@ public class MainActivity extends Activity {
 					(addr[6] & 0xf),
 					(addr[6] >> 4 & 0xf));
 			if (addrStr.equals(macAddr)) {
+				Log.d(MainActivity.LOG_TAG, "Debug - Found correct device: " + ipAddr.toString());
 				return true;
 			}
 			Log.d(MainActivity.LOG_TAG, "Error - macAddress mismatch: " + addrStr);
@@ -216,7 +219,7 @@ public class MainActivity extends Activity {
     		InetAddress deviceAddr;
 			try {
 				deviceAddr = InetAddress.getByName(deviceAddrStr);
-				if (deviceAddr.isReachable(400)) {
+				if (deviceAddr.isReachable(TIMEOUT)) {
 					Log.d(MainActivity.LOG_TAG, "Debug - Found device: " + deviceAddr.toString());
 	    			output.add(deviceAddr);
 	    		}
@@ -229,14 +232,23 @@ public class MainActivity extends Activity {
     	return output;
     }
     
+    private static void initRemote() {
+    	if (remoteComputer == null) {
+    		try {
+				remoteComputer = InetAddress.getByName(TEMP);
+			} catch (UnknownHostException e) {
+				Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer");
+				//falls through
+			}
+    	}
+    }
+    
     private class ExecuteMediaControl extends AsyncTask<String, Void, Output> {
 
 		@Override
 		protected Output doInBackground(String... cmd) {
 			//send the cmd message to the remote computer
-			if (remoteComputer == null) {
-				remoteComputer = findMacOnNetwork();
-			}
+			initRemote();
 			try {
 				if (remoteComputer == null) {
 					Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer on Network");
@@ -308,9 +320,7 @@ public class MainActivity extends Activity {
 				bytes[i] = macAddressBytes[i % 6];
 			}
 			
-			if (remoteComputer == null) {
-				remoteComputer = findMacOnNetwork();
-			}
+			initRemote();
 
 			try {
 				InetAddress ipAddress = remoteComputer;

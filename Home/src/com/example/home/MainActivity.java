@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 	private TextView previousButton;
 	private TextView quitButton;
 	private TextView randomButton;
-	private Socket connection;
+	private InetAddress remoteComputer;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,11 +235,11 @@ public class MainActivity extends Activity {
 		protected Output doInBackground(String... cmd) {
 			//send the cmd message to the remote computer
 			try {
-				InetAddress remoteComputer = findMacOnNetwork();
 				if (remoteComputer == null) {
 					Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer on Network");
+					return new Output(cmd[0], false);
 				}
-				connection = new Socket(remoteComputer, PORT);
+				Socket connection = new Socket(remoteComputer, PORT);
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
 				writer.write(cmd[0], 0, cmd[0].length());
 				writer.newLine();

@@ -28,6 +28,7 @@ public class Server {
 	static ExecutorService executor;
 	public final static String SUCCESS = "SUCCESS";
 	public final static String FAILURE = "FAILURE";
+	public final static String MAGIC = "Turn On";
 	
 	public Server() {
 		try {
@@ -49,8 +50,11 @@ public class Server {
 		Socket s = server.accept();
 		System.out.println("master got magic packet");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-		reader.readLine();
+		String value = reader.readLine();
 		server.close();
+		if (!value.equals(MAGIC)) {
+			throw new IOException();
+		}
 	}
 	
 	public static void main(String[] args) throws InterruptedException, IOException {

@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context=".MainActivity" >
-    
+        
     <Button
         android:id="@+id/myButton"
         android:layout_weight="1"
@@ -18,10 +18,18 @@
         android:onClick="handleWake"/>
     
     <TextView
-        android:id="@+id/myText"
+        android:id="@+id/button_wake_desc"
         android:layout_weight="10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/myText" />
+        android:text="@string/button_wake_desc" />
+    
+    <Button
+        android:id="@+id/startButton"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_remote" 
+        android:onClick="handleStartRemote"/>
 
 </LinearLayout>

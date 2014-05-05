@@ -75,6 +75,11 @@ public class MainActivity extends Activity {
     	
     }
     
+    /* Called when the user clicks to start remote button */
+    public void handleStartRemote(View view) {
+    	
+    }
+    
     private class ExecuteWake extends AsyncTask<Void, Void, Boolean> {
 
 		@Override

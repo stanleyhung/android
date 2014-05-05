@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -173,7 +174,34 @@ public class MainActivity extends Activity {
     }
     
     //checks to see if ipAddr is assigned to device with macAddr
-    private boolean correctAddress(String macAddr, InetAddress ipAddr) {
+    private boolean checkCorrectAddress(String macAddr, InetAddress ipAddr) {
+    	try {
+    		NetworkInterface device = NetworkInterface.getByInetAddress(ipAddr);
+			byte[] addr = device.getHardwareAddress();
+			String addrStr = String.format("%x%x.%x%x.%x%x.%x%x.%x%x.%x%x",
+					(addr[0] & 0xf),
+					(addr[0] >> 4 & 0xf),
+					(addr[1] & 0xf),
+					(addr[1] >> 4 & 0xf),
+					(addr[2] & 0xf),
+					(addr[2] >> 4 & 0xf),
+					(addr[3] & 0xf),
+					(addr[3] >> 4 & 0xf),
+					(addr[4] & 0xf),
+					(addr[4] >> 4 & 0xf),
+					(addr[5] & 0xf),
+					(addr[5] >> 4 & 0xf),
+					(addr[6] & 0xf),
+					(addr[6] >> 4 & 0xf));
+			if (addrStr.equals(macAddr)) {
+				return true;
+			}
+			Log.e(MainActivity.LOG_TAG, "Error - macAddress mismatch: " + addrStr);
+			return false;
+		} catch (SocketException e) {
+			Log.e(MainActivity.LOG_TAG, "Error - SocketException in checkCorrectAddress");
+			return false;
+		}
     	return false;
     }
     

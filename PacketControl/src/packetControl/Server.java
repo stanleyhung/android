@@ -1,7 +1,11 @@
 package packetControl;
 
 import java.awt.AWTException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -15,7 +19,7 @@ import java.util.concurrent.Future;
  * @author Stanley
  * 
  */
-public class Server extends Thread {
+public class Server {
 	private final static int NUM_THREADS = 4;
 	private MediaPlayer robot;
 	static SynchronizedQueue requests; // Queue of Messages representing media player actions
@@ -34,12 +38,26 @@ public class Server extends Thread {
 		executor = Executors.newFixedThreadPool(NUM_THREADS);
 	}
 	
-	public void run() {
-		
+	public void run() throws IOException {
+		//listens for the magic packet that instructs the majority of this java app to run
+		ServerSocket server = new ServerSocket(Network.PORT);
+		System.out.println("master listening for magic packet");
+		Socket s = server.accept();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+		reader.readLine();
+		server.close();
 	}
 	
 	public static void main(String[] args) throws InterruptedException, IOException {
 		final Server s = new Server();
+		
+		try {
+			s.run();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		
 		ExecutorService executor = Executors.newFixedThreadPool(5);
 		ArrayList<Future<String>> results = new ArrayList<Future<String>>();
 		final Network n = new Network();

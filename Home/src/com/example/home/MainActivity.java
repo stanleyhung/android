@@ -172,6 +172,10 @@ public class MainActivity extends Activity {
 					temp = InetAddress.getByName("10.10.10.69"); //TODO: find some dynamic way to get IP addr
 					connection = new Socket(temp, PORT);
 				}
+				if (connection == null) {
+					Log.e(MainActivity.LOG_TAG, "Error - connection not initialized but request wanted");
+					return new Output(cmd[0], false);
+				}
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
 				writer.write(cmd[0], 0, cmd[0].length());
 				writer.newLine();

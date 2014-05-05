@@ -199,18 +199,7 @@ public class MainActivity extends Activity {
 			}
 			if (!result.getSuccess()) {
 				correctButton.setText("FAILURE - Could not send packet");
-			}
-			
-			//additional work needed for special cases
-			if (result.getSuccess() && buttonName.equals(Message.MAGIC)) {
-				//start magic packet -> need to initialize all other buttons
-				playButton.setText("Play");
-				nextButton.setText("Next");
-				previousButton.setText("Previous");
-				quitButton.setText("Quit");
-				randomButton.setText("Random");
-			}
-			
+			}			
 			//reset button's text after 3 seconds 
 			final TextView button = correctButton;
 			final String buttonText = buttonName;

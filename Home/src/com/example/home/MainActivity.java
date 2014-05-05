@@ -164,4 +164,25 @@ public class MainActivity extends Activity {
 
     }
     
+    //Class for communication with remote computer
+    private class Message {
+    	final static String STOP = "stop";
+    	final static String PLAY = "play";
+    	final static String PAUSE = "pause";
+    	final static String NEXT = "next";
+    	final static String PREVIOUS = "previous";
+    	final static String QUIT = "quit";
+    	
+    	private String myMessage;
+    	
+    	public Message(String message) {
+    		myMessage = message;
+    	}
+    	
+    	public String getMessage() {
+    		return myMessage;
+    	}
+
+    }
+    
 }

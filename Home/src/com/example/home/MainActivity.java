@@ -166,7 +166,7 @@ public class MainActivity extends Activity {
     	int networkAddr = wm.getConnectionInfo().getIpAddress();
     	LinkedList<InetAddress> devices = scanNetwork(networkAddr);
     	for (InetAddress addr : devices) {
-    		if(correctAddress(macAddress, addr)) {
+    		if(checkCorrectAddress(macAddress, addr)) {
     			return addr;
     		}
     	}
@@ -196,13 +196,12 @@ public class MainActivity extends Activity {
 			if (addrStr.equals(macAddr)) {
 				return true;
 			}
-			Log.e(MainActivity.LOG_TAG, "Error - macAddress mismatch: " + addrStr);
+			Log.d(MainActivity.LOG_TAG, "Error - macAddress mismatch: " + addrStr);
 			return false;
 		} catch (SocketException e) {
 			Log.e(MainActivity.LOG_TAG, "Error - SocketException in checkCorrectAddress");
 			return false;
 		}
-    	return false;
     }
     
     //scan a networkAddr for a list of all reachable ipAddresses on that network
@@ -218,6 +217,7 @@ public class MainActivity extends Activity {
 			try {
 				deviceAddr = InetAddress.getByName(deviceAddrStr);
 				if (deviceAddr.isReachable(400)) {
+					Log.d(MainActivity.LOG_TAG, "Debug - Found device: " + deviceAddr.toString());
 	    			output.add(deviceAddr);
 	    		}
 			} catch (UnknownHostException e) {

@@ -14,6 +14,8 @@ public class Server extends Thread {
 	private MediaPlayer robot;
 	static SynchronizedQueue requests; // Queue of Messages representing media player actions
 	static ExecutorService executor;
+	public final static int SUCCESS = 1;
+	public final static int FAILURE = -1;
 	
 	
 	public Server() {
@@ -40,17 +42,17 @@ public class Server extends Thread {
 			}
 		});
 		Thread.sleep(3000);
-		executor.execute(new Runnable() {
+		executor.submit(new Runnable() {
 			public void run() {
 				Network.main(null);
 			}
 		});
-		executor.execute(new Runnable() {
+		executor.submit(new Runnable() {
 			public void run() {
 				Handler.main(null);
 			}
 		});
-		executor.execute(new Runnable() {
+		executor.submit(new Runnable() {
 			public void run() {
 				Client.main(null);
 			}

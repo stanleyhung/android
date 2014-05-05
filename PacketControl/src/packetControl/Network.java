@@ -49,6 +49,31 @@ public class Network implements Runnable {
 		status = false;
 		return true;
 	}
+	
+	public int call() {
+		while (true) {
+			try {
+				if (status == true) {
+					//System.out.println("network server listening for clients");
+					Socket s = server.accept(); //timeouts after TIMEOUT milliseconds
+					System.out.println("network server received client connection");
+					clients.addToQueue(s);
+					System.out.println("releasing semaphore");
+					sem.release();
+				} else {
+					return Server.SUCCESS;
+				}
+			} catch (SocketTimeoutException e) {
+				//System.out.println("network server timed-out");
+				//falls through
+			} catch (IOException e) {
+				e.printStackTrace();
+				return Server.FAILURE;
+			}
+			return Server.FAILURE;
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 * The Network thread accepts client connections and adds them to a queue that is shared by Handler threads.

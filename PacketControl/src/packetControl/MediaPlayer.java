@@ -43,6 +43,43 @@ class MediaPlayer implements Runnable{
 		Server.requests.addToQueue(m);
 		player.run();
 	}
+	
+	public int call() {
+		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", "C:\\Users\\Stanley\\Documents\\Music\\"};
+		try {
+			Process p = Runtime.getRuntime().exec(cmd);
+			Thread.sleep(5000);
+			while (true) {
+				if (Server.requests == null) {
+					break;
+				}
+				Message m = (Message) Server.requests.getNext();
+				if (m != null) {
+					int result = handle(m);
+					if (result < 0) {
+						System.err.println("error - mediaplayer could not handle message");
+						break;
+					} else if (result == QUIT) {
+						break;
+					}
+				} else {
+					continue;
+				}
+			}
+			System.out.println("Done");
+			p.destroy();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Server.FAILURE;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Server.FAILURE;
+		}
+		return Server.SUCCESS;
+	}
+	
 	@Override
 	public void run() {
 		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", "C:\\Users\\Stanley\\Documents\\Music\\"};

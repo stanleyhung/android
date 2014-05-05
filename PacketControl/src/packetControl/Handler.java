@@ -11,7 +11,7 @@ public class Handler implements Runnable {
 
 	final static String SUCCESS = "success";
 	
-	public int call() {
+	public static String call() {
 		while (true) {
 			try {
 				if (Network.sem == null) {

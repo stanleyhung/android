@@ -10,7 +10,7 @@ import java.net.Socket;
 
 public class Client implements Runnable {
 
-	public int call() {
+	public static String call() {
 		Socket s;
 		try {
 			s = new Socket(InetAddress.getLocalHost(), Network.PORT);

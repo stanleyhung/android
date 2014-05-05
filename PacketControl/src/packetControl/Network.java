@@ -18,9 +18,9 @@ import java.util.concurrent.Semaphore;
 public class Network implements Runnable {
 	
 	public final static int PORT = 9;
-	private ServerSocket server;
+	private static ServerSocket server;
 	static SynchronizedQueue clients; //Queue of sockets representing client connections
-	private boolean status;
+	private static boolean status;
 	private final static int TIMEOUT = 3000;
 	final static Semaphore sem = new Semaphore(0);
 	
@@ -50,7 +50,7 @@ public class Network implements Runnable {
 		return true;
 	}
 	
-	public int call() {
+	public static String call() {
 		while (true) {
 			try {
 				if (status == true) {

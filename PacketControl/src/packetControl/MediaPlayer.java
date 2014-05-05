@@ -44,7 +44,7 @@ class MediaPlayer implements Runnable{
 		player.run();
 	}
 	
-	public int call() {
+	public String call() {
 		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", "C:\\Users\\Stanley\\Documents\\Music\\"};
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);

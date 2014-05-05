@@ -1,8 +1,11 @@
 package packetControl;
 
 import java.awt.AWTException;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 /**
@@ -14,8 +17,8 @@ public class Server extends Thread {
 	private MediaPlayer robot;
 	static SynchronizedQueue requests; // Queue of Messages representing media player actions
 	static ExecutorService executor;
-	public final static int SUCCESS = 1;
-	public final static int FAILURE = -1;
+	public final static String SUCCESS = "adsklfjklajsklfdjdskl";
+	public final static String FAILURE = "adsklfjaklsjfd";
 	
 	
 	public Server() {
@@ -36,27 +39,28 @@ public class Server extends Thread {
 	public static void main(String[] args) throws InterruptedException {
 		final Server s = new Server();
 		ExecutorService executor = Executors.newFixedThreadPool(5);
-		executor.execute(new Runnable() {
-			public void run() {
-				s.robot.run();
+		ArrayList<Callable<String>> threads = new ArrayList<Callable<String>>();
+		executor.submit(new Callable<String>() {
+			public String call() {
+				return s.robot.call();
+			}
+		});
+		threads.add(new Callable<String>() {
+			public String call() {
+				return Network.call();
+			}
+		});
+		threads.add(new Callable<String>() {
+			public String call() {
+				return Handler.call();
+			}
+		});
+		threads.add(new Callable<String>() {
+			public String call() {
+				return Client.call();
 			}
 		});
 		Thread.sleep(3000);
-		executor.submit(new Runnable() {
-			public void run() {
-				Network.main(null);
-			}
-		});
-		executor.submit(new Runnable() {
-			public void run() {
-				Handler.main(null);
-			}
-		});
-		executor.submit(new Runnable() {
-			public void run() {
-				Client.main(null);
-			}
-		});
 		
 		executor.shutdown();
 	}

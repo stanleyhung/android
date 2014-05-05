@@ -8,6 +8,7 @@ import java.io.IOException;
 //RobotControl handles the lower-level logic for interfacing with VLC Media Player through keystrokes
 class MediaPlayer implements Runnable{
 	private Robot robot;
+	private final static int QUIT = 100;
 	
 	public MediaPlayer() throws AWTException {
 		robot = new Robot();
@@ -28,6 +29,9 @@ class MediaPlayer implements Runnable{
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			return -1;
+		}
+		if (m.getMessage() == Message.QUIT) {
+			return QUIT;
 		}
 		return 0;
 	}
@@ -51,8 +55,11 @@ class MediaPlayer implements Runnable{
 				}
 				Message m = (Message) Server.requests.getNext();
 				if (m != null) {
-					if (handle(m) != 0) {
+					int result = handle(m);
+					if (result < 0) {
 						System.err.println("error - mediaplayer could not handle message");
+						break;
+					} else if (result == QUIT) {
 						break;
 					}
 				} else {

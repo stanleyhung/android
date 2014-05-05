@@ -49,7 +49,7 @@ class MediaPlayer implements Runnable{
 		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", "C:\\Users\\Stanley\\Documents\\Music\\"};
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
-			Thread.sleep(5000);
+			//Thread.sleep(5000);
 			while (true) {
 				if (Server.requests == null) {
 					break;
@@ -70,10 +70,6 @@ class MediaPlayer implements Runnable{
 			System.out.println("Done");
 			p.destroy();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return Server.FAILURE;
-		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Server.FAILURE;

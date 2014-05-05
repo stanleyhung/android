@@ -99,43 +99,47 @@ public class MainActivity extends Activity {
     	ew.execute();
     }
     
-    /* Called when the user clicks to start remote button */
+    /*
+     *  The following handle*** methods are called when the appropriate button is clicked
+     */    
+    
     public void handleStartRemote(View view) {
+    	sendMessage(Message.MAGIC);
+    }
+    
+    public void handleStop(View view) {
+    	sendMessage(Message.STOP);
+    }
+    
+    public void handlePlay(View view) {
+    	sendMessage(Message.PLAY);
+    }
+    
+    public void handlePause(View view) {
+    	sendMessage(Message.PAUSE);
+    }
+    
+    public void handleNext(View view) {
+    	sendMessage(Message.NEXT);
+    }
+    
+    public void handlePrevious(View view) {
+    	sendMessage(Message.PREVIOUS);
+    }
+    
+    public void handleQuit(View view) {
+    	sendMessage(Message.QUIT);
+    }
+    
+    //initializes the logic to send a packet to the computer
+    public void sendMessage(String message) {
     	/*
     	if(!checkConnectivity()) {
     		return;
     	}
     	*/
     	ExecuteMediaControl er = new ExecuteMediaControl();
-    	er.execute(Message.MAGIC);
-    }
-    
-    public void handleStop(View view) {
-    	
-    }
-    
-    public void handlePlay(View view) {
-    	
-    }
-    
-    public void handlePause(View view) {
-    	
-    }
-    
-    public void handleNext(View view) {
-    	
-    }
-    
-    public void handlePrevious(View view) {
-    	
-    }
-    
-    public void handleQuit(View view) {
-    	
-    }
-    
-    public void handleMediaControl(View view) {
-    	
+    	er.execute(message);
     }
     
     private class Output {
@@ -160,6 +164,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Output doInBackground(String... cmd) {
+			//send the cmd message to the remote computer
 			InetAddress temp;
 			try {
 				temp = InetAddress.getByName("10.10.10.69");

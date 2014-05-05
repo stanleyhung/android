@@ -27,10 +27,11 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	
-	private final static String macAddress = "00.1D.60.88.57.46";
+	//private final static String macAddress = "00.1D.60.88.57.46";
+	private final static String macAddress = "7C.E9.D3.20.78.5E";
 	private final static int PORT = 9; //Wake-On Lan port
 	public final static String LOG_TAG = "HOME";
-	private final static String HOME = "\"Stanley\"";
+	private final static String HOME = "\"HungFamily-5G\"";
 	
 	private TextView wakeButton;
 	private TextView startRemoteButton;
@@ -94,7 +95,6 @@ public class MainActivity extends Activity {
     		wakeButton.setText("Failure - Not Connected to 'Stanley' network");
     		return;
     	}
-    	remoteComputer = findMacOnNetwork();
     	ExecuteWake ew = new ExecuteWake();
     	ew.execute();
     }
@@ -234,6 +234,9 @@ public class MainActivity extends Activity {
 		@Override
 		protected Output doInBackground(String... cmd) {
 			//send the cmd message to the remote computer
+			if (remoteComputer == null) {
+				remoteComputer = findMacOnNetwork();
+			}
 			try {
 				if (remoteComputer == null) {
 					Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer on Network");
@@ -303,6 +306,10 @@ public class MainActivity extends Activity {
 
 			for (int i = 6; i < bytes.length; i++) {
 				bytes[i] = macAddressBytes[i % 6];
+			}
+			
+			if (remoteComputer == null) {
+				remoteComputer = findMacOnNetwork();
 			}
 
 			try {

@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 
 import android.app.Activity;
 import android.content.Context;
@@ -152,6 +153,34 @@ public class MainActivity extends Activity {
     	public boolean getSuccess() {
     		return success;
     	}
+    }
+    
+    private InetAddress findMacOnNetwork() {
+    	ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    	NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+    	if (networkInfo == null ||  !networkInfo.isConnected()) {
+    		return null;
+    	}
+    	WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+    	int networkAddr = wm.getConnectionInfo().getIpAddress();
+    	LinkedList<InetAddress> devices = scanNetwork(networkAddr);
+    	for (InetAddress addr : devices) {
+    		if(correctAddress(macAddress, addr)) {
+    			return addr;
+    		}
+    	}
+    	return null;
+    }
+    
+    //checks to see if ipAddr is assigned to device with macAddr
+    private boolean correctAddress(String macAddr, InetAddress ipAddr) {
+    	return false;
+    }
+    
+    //scan a networkAddr for a list of all reachable ipaddrs on that network
+    private LinkedList<InetAddress> scanNetwork(int networkAddr) {
+    	LinkedList<InetAddress> output = new LinkedList<InetAddress>();
+    	return output;
     }
     
     private class ExecuteMediaControl extends AsyncTask<String, Void, Output> {

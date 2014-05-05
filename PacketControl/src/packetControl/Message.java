@@ -9,22 +9,20 @@ public class Message {
 	private String myMessage;
 	private int[] key;
 	
-	final static String STOP = "stop";
 	final static String PLAY = "play";
-	final static String PAUSE = "pause";
 	final static String NEXT = "next";
 	final static String PREVIOUS = "previous";
 	final static String QUIT = "quit";
+	final static String RANDOM = "random";
 	
 	private static final Map<String, int[]> validCommands;
 	static {
 		validCommands = new HashMap<String, int[]>();
-		validCommands.put(STOP, new int[] {KeyEvent.VK_S});
 		validCommands.put(PLAY, new int[] {KeyEvent.VK_SPACE});
-		validCommands.put(PAUSE, new int[] {KeyEvent.VK_SPACE});
 		validCommands.put(NEXT, new int[] {KeyEvent.VK_N});
 		validCommands.put(PREVIOUS, new int[] {KeyEvent.VK_P});
 		validCommands.put(QUIT, new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_Q});
+		validCommands.put(RANDOM, new int[] {KeyEvent.VK_R});
 	}
 	
 	public Message(String message) {

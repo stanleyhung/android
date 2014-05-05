@@ -50,20 +50,12 @@ public class Network implements Runnable {
 		return true;
 	}
 	
-	public static String call() {
-		Network n;
-		try {
-			n = new Network();
-		} catch (IOException e1) {
-			System.err.println("could not create a network server");
-			return Server.FAILURE;
-		}
-		n.turnOn();
+	public String call() {
 		while (true) {
 			try {
-				if (n.status == true) {
+				if (status == true) {
 					System.out.println("network server listening for clients");
-					Socket s = n.server.accept(); //timeouts after TIMEOUT milliseconds
+					Socket s = server.accept(); //timeouts after TIMEOUT milliseconds
 					System.out.println("network server received client connection");
 					clients.addToQueue(s);
 					System.out.println("releasing semaphore");
@@ -78,7 +70,6 @@ public class Network implements Runnable {
 				e.printStackTrace();
 				return Server.FAILURE;
 			}
-			return Server.FAILURE;
 		}
 	}
 	

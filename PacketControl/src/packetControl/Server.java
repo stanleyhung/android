@@ -85,11 +85,13 @@ public class Server {
 				return Handler.call();
 			}
 		}));
+		/*
 		results.add(executor.submit(new Callable<String>() {
 			public String call() {
 				return Client.call();
 			}
 		}));
+		*/
 		
 		while (true) {
 			System.out.println("Master checking for completion");

@@ -1,6 +1,8 @@
 package com.example.home;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -103,6 +105,10 @@ public class MainActivity extends Activity {
 			try {
 				temp = InetAddress.getByName("10.10.10.69");
 				Socket s = new Socket(temp, PORT);
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+				writer.write(new String(Message.MAGIC), 0, Message.MAGIC.length());
+				writer.newLine();
+				writer.flush();
 			} catch (UnknownHostException e) {
 				Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
 				return false;
@@ -186,6 +192,7 @@ public class MainActivity extends Activity {
     	final static String NEXT = "next";
     	final static String PREVIOUS = "previous";
     	final static String QUIT = "quit";
+    	final static String MAGIC = "Turn On";
     	
     	private String myMessage;
     	

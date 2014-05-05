@@ -234,10 +234,12 @@ public class MainActivity extends Activity {
 		@Override
 		protected Output doInBackground(String... cmd) {
 			//send the cmd message to the remote computer
-			InetAddress temp;
 			try {
-				temp = InetAddress.getByName("10.10.10.69"); //TODO: find some dynamic way to get IP addr
-				connection = new Socket(temp, PORT);
+				InetAddress remoteComputer = findMacOnNetwork();
+				if (remoteComputer == null) {
+					Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer on Network");
+				}
+				connection = new Socket(remoteComputer, PORT);
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
 				writer.write(cmd[0], 0, cmd[0].length());
 				writer.newLine();

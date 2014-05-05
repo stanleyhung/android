@@ -181,14 +181,23 @@ public class MainActivity extends Activity {
     private LinkedList<InetAddress> scanNetwork(int networkAddr) {
     	LinkedList<InetAddress> output = new LinkedList<InetAddress>();
     	for (int i = 0; i < 255; i++) {
-    		String deviceAddr = String.format("%d.%d.%d.%d",
+    		String deviceAddrStr = String.format("%d.%d.%d.%d",
     				(networkAddr & 0xff),
     				(networkAddr >> 8 & 0xff),
     				(networkAddr >> 16 & 0xff),
     				i);
-    		
+    		InetAddress deviceAddr;
+			try {
+				deviceAddr = InetAddress.getByName(deviceAddrStr);
+				if (deviceAddr.isReachable(400)) {
+	    			output.add(deviceAddr);
+	    		}
+			} catch (UnknownHostException e) {
+				//falls through
+			} catch (IOException e) {
+				//falls through
+			}
     	}
-    	InetAddress network = InetAddress.getByName(ipString);
     	return output;
     }
     

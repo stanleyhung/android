@@ -27,11 +27,11 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	
-	//private final static String macAddress = "00.1D.60.88.57.46";
-	private final static String macAddress = "7C.E9.D3.20.78.5E";
+	private final static String macAddress = "00.1D.60.88.57.46";
+	//private final static String macAddress = "7C.E9.D3.20.78.5E";
 	private final static int PORT = 9; //Wake-On Lan port
 	public final static String LOG_TAG = "HOME";
-	private final static String HOME = "\"HungFamily-5G\"";
+	private final static String HOME = "\"Stanley\"";
 	private final static int TIMEOUT = 100;
 	private static String TEMP = "10.10.10.69";
 	

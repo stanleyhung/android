@@ -1,20 +1,18 @@
 package com.example.home;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
@@ -48,6 +46,7 @@ public class MainActivity extends Activity {
 	private TextView quitButton;
 	private TextView randomButton;
 	private static InetAddress remoteComputer;
+    private static ArrayList<InetAddress> possibleRemoteComputers;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,10 +163,12 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * Tries to search for the network address of the macAddress we have for the computer we want to use.
+     * Searches the network for all possible computers to send packets to.
+     * IMPORTANT: Because there is no easy way to map from network addresses to physical addresses in Android,
+     * there isn't a definitive way to select the exact remote computer we want to send our packets to.
      */
-    private void findMacOnNetwork() {
-        if (remoteComputer != null) {
+    private void findAllRemoteComputers() {
+        if (possibleRemoteComputers != null) {
             return;
         }
     	ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -177,71 +178,13 @@ public class MainActivity extends Activity {
     	}
     	WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
     	int networkAddr = wm.getConnectionInfo().getIpAddress();
-    	LinkedList<InetAddress> devices = scanNetwork(networkAddr);
-        remoteComputer = getMacFromArpCache(devices);
-    }
-
-    /**
-     * Modified version of http://www.flattermann.net/2011/02/android-howto-find-the-hardware-mac-address-of-a-remote-host/
-     *
-     * Try to extract a hardware MAC address from a given IP address using the
-     * ARP cache (/proc/net/arp).<br>
-     * <br>
-     * We assume that the file has this structure:<br>
-     * <br>
-     * IP address       HW type     Flags       HW address            Mask     Device
-     * 192.168.18.11    0x1         0x2         00:04:20:06:55:1a     *        eth0
-     * 192.168.18.36    0x1         0x2         00:22:43:ab:2a:5b     *        eth0
-     *
-     * @return the ipAddress corresponding to the macAddress we are looking for in the ARP cache
-     */
-    public static InetAddress getMacFromArpCache(LinkedList<InetAddress> addresses) {
-        // Convert all the addresses we are interested in to Strings
-        HashMap<String, InetAddress> strAddresses = new HashMap<String, InetAddress>();
-        for (InetAddress addr : addresses) {
-            String ip = addr.getHostAddress();
-            strAddresses.put(ip, addr);
-        }
-        // No interesting addresses
-        if (strAddresses.size() == 0) {
-            return null;
-        }
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader("/proc/net/arp"));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] splitted = line.split(" +");
-                if (splitted.length >= 4) {
-                    for (String ip : strAddresses.keySet()) {
-                        if (ip.equals(splitted[0])) {
-                            // Basic sanity check
-                            String mac = splitted[3];
-                            if (mac.matches(macAddress.replace('.', ':'))) {
-                                return strAddresses.get(ip);
-                            } else {
-                                return null;
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Log.e(MainActivity.LOG_TAG, "Error - while reading from arp cache: " + e.toString());
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                // fall through
-            }
-        }
-        return null;
+    	possibleRemoteComputers = scanNetwork(networkAddr);
     }
     
-    //scan a networkAddr for a list of all reachable ipAddresses on that network
-    private LinkedList<InetAddress> scanNetwork(int networkAddr) {
-    	LinkedList<InetAddress> output = new LinkedList<InetAddress>();
-    	for (int i = 0; i < 255; i++) {
+    //scans a networkAddr for a list of all reachable ipAddresses on that network
+    private ArrayList<InetAddress> scanNetwork(int networkAddr) {
+        ArrayList<InetAddress> output = new ArrayList<InetAddress>();
+    	for (int i = 1; i < 255; i++) {
     		String deviceAddrStr = String.format("%d.%d.%d.%d",
     				(networkAddr & 0xff),
     				(networkAddr >> 8 & 0xff),
@@ -268,7 +211,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected Output doInBackground(String... cmd) {
 			//send the cmd message to the remote computer
-			findMacOnNetwork();
+			findAllRemoteComputers();
 			try {
 				if (remoteComputer == null) {
 					Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer on Network");
@@ -327,12 +270,15 @@ public class MainActivity extends Activity {
 
     /**
      * A class to asynchronously execute sending a magic wake packet to the remote computer.
+     * Since we don't know exactly what network address we are trying to wake, we keep track of all
+     * successes or failures using a hashmap.
      */
-    private class ExecuteWake extends AsyncTask<Void, Void, Boolean> {
+    private class ExecuteWake extends AsyncTask<Void, Void, HashMap<InetAddress, Boolean>> {
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected HashMap<InetAddress, Boolean> doInBackground(Void... params) {
             // Create the magic packet using the macAddress of the computer we're looking for.
+            HashMap<InetAddress, Boolean> output = new HashMap<InetAddress, Boolean>();
 			byte[] macAddressBytes = getAddressBytes(macAddress, 16);
 			byte[] bytes = new byte[6 + 16*macAddressBytes.length];
 
@@ -344,32 +290,42 @@ public class MainActivity extends Activity {
 				bytes[i] = macAddressBytes[i % 6];
 			}
 
-            findMacOnNetwork();
+            findAllRemoteComputers();
 
-			try {
-				InetAddress ipAddress = remoteComputer;
-				DatagramPacket packet = new DatagramPacket(bytes, bytes.length, ipAddress,80);
-				DatagramSocket socket = new DatagramSocket();
-				socket.send(packet);
-				socket.close();
-			} catch(UnknownHostException e) {
-				Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
-				return false;
-			} catch(SocketException e) {
-				Log.e(MainActivity.LOG_TAG, "Error - Socket Exception");
-				Log.e(MainActivity.LOG_TAG, e.getMessage());
-				return false;
-			} catch(IOException e) {
-				Log.e(MainActivity.LOG_TAG, "Error - IO Exception");
-				return false;
-			}
-			return true;
+            for (InetAddress ipAddress : possibleRemoteComputers) {
+                try {
+                    DatagramPacket packet = new DatagramPacket(bytes, bytes.length, ipAddress,80);
+                    DatagramSocket socket = new DatagramSocket();
+                    socket.send(packet);
+                    socket.close();
+                } catch(UnknownHostException e) {
+                    Log.e(MainActivity.LOG_TAG, "Error - Unknown host");
+                    output.put(ipAddress, false);
+                } catch(SocketException e) {
+                    Log.e(MainActivity.LOG_TAG, "Error - Socket Exception");
+                    Log.e(MainActivity.LOG_TAG, e.getMessage());
+                    output.put(ipAddress, false);
+                } catch(IOException e) {
+                    Log.e(MainActivity.LOG_TAG, "Error - IO Exception");
+                    output.put(ipAddress, false);
+                }
+                output.put(ipAddress, true);
+            }
+            return output;
 		}
 		
 		// onPostExecute displays the results of the AsyncTask.
         @Override
-        protected void onPostExecute(Boolean result) {
-        	if (result == true) {
+        protected void onPostExecute(HashMap<InetAddress, Boolean> result) {
+            boolean packetSent = false; // was a wake packet successfully sent somewhere?
+            for (Map.Entry<InetAddress, Boolean> entry : result.entrySet()) {
+                if (entry.getValue() == false) {
+                    possibleRemoteComputers.remove(entry.getKey());
+                } else {
+                    packetSent = true;
+                }
+            }
+        	if (packetSent == true) {
         		wakeButton.setText("Success!");
         		Handler h = new Handler();
         		h.postDelayed(new Runnable() { 

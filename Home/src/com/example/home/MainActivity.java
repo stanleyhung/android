@@ -175,7 +175,7 @@ public class MainActivity extends Activity {
      */
     private void findAllRemoteComputers() {
         try {
-            remoteComputer = InetAddress.getByAddress(getAddressBytes(staticIpAddress, 16));
+            remoteComputer = InetAddress.getByName(staticIpAddress);
             possibleRemoteComputers.add(remoteComputer);
         } catch (Exception e) {
             // falls through
@@ -235,6 +235,7 @@ public class MainActivity extends Activity {
                         Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer on Network");
                         output.add(new Output(cmd[0], false, remoteComputer));
                     }
+                    Log.d(MainActivity.LOG_TAG, "Debug - Sending media control packet to :" + remoteComputer);
                     Socket connection = new Socket(remoteComputer, PORT);
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
                     writer.write(cmd[0], 0, cmd[0].length());
@@ -324,6 +325,7 @@ public class MainActivity extends Activity {
 
             for (InetAddress ipAddress : possibleRemoteComputers) {
                 try {
+                    Log.d(MainActivity.LOG_TAG, "Debug - sending packet to : " + ipAddress);
                     DatagramPacket packet = new DatagramPacket(bytes, bytes.length, ipAddress,80);
                     DatagramSocket socket = new DatagramSocket();
                     socket.send(packet);

@@ -210,8 +210,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Output doInBackground(String... cmd) {
-			//send the cmd message to the remote computer
-			findAllRemoteComputers();
+			//send the 'cmd' message to the remote computer
 			try {
 				if (remoteComputer == null) {
 					Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer on Network");
@@ -332,7 +331,7 @@ public class MainActivity extends Activity {
         	         public void run() { 
         	        	 wakeButton.setText("Turn On Computer"); 
         	         } 
-        	    }, 3000); 
+        	    }, 10000);
         	} else {
         		wakeButton.setText("FAILURE - Could not send packet");
         	}

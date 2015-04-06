@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 	private TextView quitButton;
 	private TextView randomButton;
 	private static InetAddress remoteComputer;
-    private static ArrayList<InetAddress> possibleRemoteComputers;
+    private final static ArrayList<InetAddress> possibleRemoteComputers = new ArrayList<InetAddress>();
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {

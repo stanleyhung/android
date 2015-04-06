@@ -15,10 +15,6 @@ class MediaPlayer implements Runnable{
 		robot = new Robot();
 	}
 	
-	/**
-	 * @param args
-	 */
-	
 	public int handle(Message m) {
 		try {
 			System.out.println("VLC handling message: " + m.getMessage());
@@ -47,7 +43,8 @@ class MediaPlayer implements Runnable{
 	}
 	
 	public String call() {
-		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", "C:\\Users\\Stanley\\Documents\\Music\\"};
+        //TODO: Can I dynamically find ths music folder?
+		String[] cmd = {"\"C:/Program Files/VideoLAN/VLC/vlc.exe\"", "F:\\Users\\Stanley\\Music\\"};
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
 			Thread.sleep(3000);
@@ -74,15 +71,21 @@ class MediaPlayer implements Runnable{
 			}
 			System.out.println("Done");
 			p.destroy();
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Server.FAILURE;
-		}
+		} catch (InterruptedException e) {
+            e.printStackTrace();
+            return Server.FAILURE;
+        }
 		return Server.SUCCESS;
 	}
 	
 	@Override
+    /**
+     * @deprecated DO NOT USE
+     */
 	public void run() {
 		String[] cmd = {"\"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe\"", "C:\\Users\\Stanley\\Documents\\Music\\"};
 		try {

@@ -1,6 +1,8 @@
 package com.example.home;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
@@ -10,6 +12,8 @@ import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import android.app.Activity;
@@ -158,54 +162,80 @@ public class MainActivity extends Activity {
     		return success;
     	}
     }
-    
-    private InetAddress findMacOnNetwork() {
+
+    /**
+     * Tries to search for the network address of the macAddress we have for the computer we want to use.
+     */
+    private void findMacOnNetwork() {
+        if (remoteComputer != null) {
+            return;
+        }
     	ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     	NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     	if (networkInfo == null ||  !networkInfo.isConnected()) {
-    		return null;
+    		return;
     	}
     	WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
     	int networkAddr = wm.getConnectionInfo().getIpAddress();
     	LinkedList<InetAddress> devices = scanNetwork(networkAddr);
-    	for (InetAddress addr : devices) {
-    		if(checkCorrectAddress(macAddress, addr)) {
-    			return addr;
-    		}
-    	}
-    	return null;
+        remoteComputer = getMacFromArpCache(devices);
     }
-    
-    //checks to see if ipAddr is assigned to device with macAddr
-    private boolean checkCorrectAddress(String macAddr, InetAddress ipAddr) {
-    	try {
-    		NetworkInterface device = NetworkInterface.getByInetAddress(ipAddr); //TODO: doesn't work for remote machines
-			byte[] addr = device.getHardwareAddress();
-			String addrStr = String.format("%x%x.%x%x.%x%x.%x%x.%x%x.%x%x",
-					(addr[0] & 0xf),
-					(addr[0] >> 4 & 0xf),
-					(addr[1] & 0xf),
-					(addr[1] >> 4 & 0xf),
-					(addr[2] & 0xf),
-					(addr[2] >> 4 & 0xf),
-					(addr[3] & 0xf),
-					(addr[3] >> 4 & 0xf),
-					(addr[4] & 0xf),
-					(addr[4] >> 4 & 0xf),
-					(addr[5] & 0xf),
-					(addr[5] >> 4 & 0xf),
-					(addr[6] & 0xf),
-					(addr[6] >> 4 & 0xf));
-			if (addrStr.equals(macAddr)) {
-				Log.d(MainActivity.LOG_TAG, "Debug - Found correct device: " + ipAddr.toString());
-				return true;
-			}
-			Log.d(MainActivity.LOG_TAG, "Error - macAddress mismatch: " + addrStr);
-			return false;
-		} catch (SocketException e) {
-			Log.e(MainActivity.LOG_TAG, "Error - SocketException in checkCorrectAddress");
-			return false;
-		}
+
+    /**
+     * Modified version of http://www.flattermann.net/2011/02/android-howto-find-the-hardware-mac-address-of-a-remote-host/
+     *
+     * Try to extract a hardware MAC address from a given IP address using the
+     * ARP cache (/proc/net/arp).<br>
+     * <br>
+     * We assume that the file has this structure:<br>
+     * <br>
+     * IP address       HW type     Flags       HW address            Mask     Device
+     * 192.168.18.11    0x1         0x2         00:04:20:06:55:1a     *        eth0
+     * 192.168.18.36    0x1         0x2         00:22:43:ab:2a:5b     *        eth0
+     *
+     * @return the ipAddress corresponding to the macAddress we are looking for in the ARP cache
+     */
+    public static InetAddress getMacFromArpCache(LinkedList<InetAddress> addresses) {
+        // Convert all the addresses we are interested in to Strings
+        HashMap<String, InetAddress> strAddresses = new HashMap<String, InetAddress>();
+        for (InetAddress addr : addresses) {
+            String ip = addr.getHostAddress();
+            strAddresses.put(ip, addr);
+        }
+        // No interesting addresses
+        if (strAddresses.size() == 0) {
+            return null;
+        }
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader("/proc/net/arp"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] splitted = line.split(" +");
+                if (splitted.length >= 4) {
+                    for (String ip : strAddresses.keySet()) {
+                        if (ip.equals(splitted[0])) {
+                            // Basic sanity check
+                            String mac = splitted[3];
+                            if (mac.matches(macAddress.replace('.', ':'))) {
+                                return strAddresses.get(ip);
+                            } else {
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(MainActivity.LOG_TAG, "Error - while reading from arp cache: " + e.toString());
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                // fall through
+            }
+        }
+        return null;
     }
     
     //scan a networkAddr for a list of all reachable ipAddresses on that network
@@ -232,26 +262,13 @@ public class MainActivity extends Activity {
     	}
     	return output;
     }
-
-    //TODO: Dynamically find the ipAddress of the computer
-    //Right now, this method just uses a hard-coded temp ipaddr to find the computer.
-    private static void initRemote() {
-    	if (remoteComputer == null) {
-    		try {
-				remoteComputer = InetAddress.getByName(TEMP);
-			} catch (UnknownHostException e) {
-				Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer");
-				//falls through
-			}
-    	}
-    }
     
     private class ExecuteMediaControl extends AsyncTask<String, Void, Output> {
 
 		@Override
 		protected Output doInBackground(String... cmd) {
 			//send the cmd message to the remote computer
-			initRemote();
+			findMacOnNetwork();
 			try {
 				if (remoteComputer == null) {
 					Log.e(MainActivity.LOG_TAG, "Error - Could not find remoteComputer on Network");
@@ -273,7 +290,7 @@ public class MainActivity extends Activity {
 			}
 			return new Output(cmd[0], true);
 		}
-		
+
 		protected void onPostExecute(Output result) {
 			TextView correctButton = null;
 			String buttonName = result.getType();
@@ -294,20 +311,23 @@ public class MainActivity extends Activity {
 			}
 			if (!result.getSuccess()) {
 				correctButton.setText("FAILURE - Could not send packet");
-			}			
-			//reset button's text after 3 seconds 
+			}
+			//reset button's text after 3 seconds
 			final TextView button = correctButton;
 			final String buttonText = buttonName;
 			Handler h = new Handler();
-    		h.postDelayed(new Runnable() { 
-    	         public void run() { 
-    	        	 button.setText(buttonText); 
-    	         } 
+    		h.postDelayed(new Runnable() {
+    	         public void run() {
+    	        	 button.setText(buttonText);
+    	         }
     	    }, 3000);
 		}
-    	
+
     }
-    
+
+    /**
+     * A class to asynchronously execute sending a magic wake packet to the remote computer.
+     */
     private class ExecuteWake extends AsyncTask<Void, Void, Boolean> {
 
 		@Override
@@ -323,8 +343,8 @@ public class MainActivity extends Activity {
 			for (int i = 6; i < bytes.length; i++) {
 				bytes[i] = macAddressBytes[i % 6];
 			}
-			
-			initRemote();
+
+            findMacOnNetwork();
 
 			try {
 				InetAddress ipAddress = remoteComputer;

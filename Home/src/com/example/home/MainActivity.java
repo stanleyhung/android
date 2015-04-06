@@ -232,7 +232,9 @@ public class MainActivity extends Activity {
     	}
     	return output;
     }
-    
+
+    //TODO: Dynamically find the ipAddress of the computer
+    //Right now, this method just uses a hard-coded temp ipaddr to find the computer.
     private static void initRemote() {
     	if (remoteComputer == null) {
     		try {
@@ -310,6 +312,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
+            // Create the magic packet using the macAddress of the computer we're looking for.
 			byte[] macAddressBytes = getAddressBytes(macAddress, 16);
 			byte[] bytes = new byte[6 + 16*macAddressBytes.length];
 
